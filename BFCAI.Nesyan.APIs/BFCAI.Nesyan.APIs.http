@@ -1,0 +1,6 @@
+@BFCAI.Nesyan.APIs_HostAddress = http://localhost:5107
+
+GET {{BFCAI.Nesyan.APIs_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
