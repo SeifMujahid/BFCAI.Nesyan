@@ -1,4 +1,4 @@
-
+using BFCAI.Nesyan.Infrastructure.Presistence;
 namespace BFCAI.Nesyan.APIs
 {
     public class Program
@@ -6,15 +6,20 @@ namespace BFCAI.Nesyan.APIs
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            #region Configure Services
             // Add services to the container.
-
             builder.Services.AddControllers();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddPresistenceService(builder.Configuration);
+            #endregion
+
             var app = builder.Build();
+
+            #region Configure Kestrel Middlewares
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -30,7 +35,8 @@ namespace BFCAI.Nesyan.APIs
 
             app.MapControllers();
 
-            app.Run();
+            app.Run(); 
+            #endregion
         }
     }
 }
