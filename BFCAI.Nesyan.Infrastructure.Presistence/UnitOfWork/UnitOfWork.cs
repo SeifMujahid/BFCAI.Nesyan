@@ -8,7 +8,7 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.UnitOfWork
 {
     public class UnitOfWork(StoreContext DbContext) : IUnitOfWork
     {
-        private readonly ConcurrentDictionary<string, object> _repositories=new();
+        private readonly ConcurrentDictionary<string, object> _repositories = new();
 
         public IGenericRepository<TEntity, TKey> GetRepository<TEntity, TKey>()
              where TEntity : BaseEntity<TKey>

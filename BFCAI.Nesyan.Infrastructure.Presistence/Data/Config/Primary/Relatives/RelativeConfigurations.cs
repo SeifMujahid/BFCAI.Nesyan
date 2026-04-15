@@ -10,9 +10,7 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Config.Primary.Relatives
         {
             base.Configure(builder);
 
-            builder.Property(r => r.Relationship)
-                .IsRequired()
-                .HasMaxLength(50);
+            
         }
     }
 }

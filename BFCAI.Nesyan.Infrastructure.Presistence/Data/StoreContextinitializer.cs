@@ -24,6 +24,6 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.Data
             }
         }
 
-       
+
     }
 }

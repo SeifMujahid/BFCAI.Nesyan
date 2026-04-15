@@ -1,6 +1,11 @@
-using BFCAI.Nesyan.Domain.Entities.Primary.MindGames;
+﻿
+using BFCAI.Nesyan.Domain.Entities.Relations;
 using System;
-
+using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
+using System.Text;
+using System.Threading.Tasks;
 namespace BFCAI.Nesyan.Domain.Entities.Primary.Patient
 {
     public enum AlzheimerStage
@@ -9,20 +14,25 @@ namespace BFCAI.Nesyan.Domain.Entities.Primary.Patient
         Stage2_Moderate = 2,
         Stage3_Severe = 3
     }
-
+    public enum BloodType
+    {
+        A_Positive,
+        A_Negative,
+        B_Positive,
+        B_Negative,
+        AB_Positive,
+        AB_Negative,
+        O_Positive,
+        O_Negative
+    }
     public class Patient : User
     {
+        public AlzheimerStage CurrentStage { get; set; } 
         public double Height { get; set; }
         public double Weight { get; set; }
-        public string BloodType { get; set; } = null!;
-        public string? ChronicDiseases { get; set; }
-        
-        public AlzheimerStage CurrentStage { get; set; } = AlzheimerStage.Stage1_Mild;
+        public BloodType BloodType { get; set; }
+        public string ChronicDisease { get; set; } = null!;
 
-        // Navigation properties
-        public ICollection<Relative.Relative> Relatives { get; set; } = new List<Relative.Relative>();
-        public ICollection<Doctor.Doctor> Doctors { get; set; } = new List<Doctor.Doctor>();
-        public ICollection<TreatmentRequests.TreatmentRequest> TreatmentRequests { get; set; } = new List<TreatmentRequests.TreatmentRequest>();
-        public ICollection<PatientMindGame> AssignedGames { get; set; } = new List<PatientMindGame>();
+
     }
 }

@@ -52,7 +52,8 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Config.Primary
 
             // Enum as int
             builder.Property(u => u.Gender)
-                .HasConversion<int>()
+                .HasConversion<string>()
+                .HasMaxLength(6)
                 .IsRequired();
 
             // Indexes (VERY IMPORTANT)

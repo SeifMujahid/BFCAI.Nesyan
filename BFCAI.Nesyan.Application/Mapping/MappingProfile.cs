@@ -3,13 +3,12 @@ using BFCAI.Nesyan.Application.Abstraction.Models.Doctors;
 using BFCAI.Nesyan.Domain.Entities.Primary;
 using BFCAI.Nesyan.Domain.Entities.Primary.Doctor;
 using BFCAI.Nesyan.Application.Abstraction.Models.TreatmentRequests;
-using BFCAI.Nesyan.Domain.Entities.Primary.TreatmentRequests;
 using BFCAI.Nesyan.Application.Abstraction.Models.Patients;
 using BFCAI.Nesyan.Domain.Entities.Primary.Patient;
 using BFCAI.Nesyan.Application.Abstraction.Models.Medications;
-using BFCAI.Nesyan.Domain.Entities.Primary.Medications;
+
 using BFCAI.Nesyan.Application.Abstraction.Models.MindGames;
-using BFCAI.Nesyan.Domain.Entities.Primary.MindGames;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,10 +26,10 @@ namespace BFCAI.Nesyan.Application.Mapping
                     .ForMember(dest => dest.Gender,
                     opt => opt.MapFrom(src => Enum.Parse<Gender>(src.Gender, true)));
 
-            CreateMap<TreatmentRequest, TreatmentRequestToReturnDto>()
-                .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.ToString()));
+            //CreateMap<TreatmentRequest, TreatmentRequestToReturnDto>()
+                //.ForMember(d => d.Status, o => o.MapFrom(s => s.Status.ToString()));
 
-            CreateMap<TreatmentRequestToCreateDto, TreatmentRequest>();
+            //CreateMap<TreatmentRequestToCreateDto, TreatmentRequest>();
 
             CreateMap<Patient, PatientToReturnDto>()
                 .ForMember(d => d.CurrentStageName, o => o.MapFrom(s => s.CurrentStage.ToString()));
@@ -41,12 +40,12 @@ namespace BFCAI.Nesyan.Application.Mapping
 
 
             // Medications
-            CreateMap<MedicationToCreateDto, Medication>();
-            CreateMap<Medication, MedicationToReturnDto>();
-            
+            //CreateMap<MedicationToCreateDto, Medication>();
+            //CreateMap<Medication, MedicationToReturnDto>();
+
             // Mind Games
-            CreateMap<MindGame, MindGameDto>();
-            CreateMap<PatientMindGame, PatientMindGameDto>();
+            //CreateMap<MindGame, MindGameDto>();
+            //CreateMap<PatientMindGame, PatientMindGameDto>();
         }
     }
 }

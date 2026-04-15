@@ -13,21 +13,31 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Config.Primary.Patients
             builder.Property(p => p.BloodType)
                 .IsRequired()
                 .HasMaxLength(10);
-
             builder.Property(p => p.CurrentStage)
-                .HasConversion<int>()
-                .IsRequired();
+               .IsRequired()
+               .HasConversion<string>();
 
-            // Setup Many-to-Many with Doctor
-            builder.HasMany(p => p.Doctors)
-                .WithMany(d => d.Patients)
-                .UsingEntity(j => j.ToTable("DoctorPatients"));
+            // Height
+            builder.Property(p => p.Height)
+                   .IsRequired()
+                   .HasColumnType("decimal(5,2)");
 
-            // Setup One-to-Many with Relative
-            builder.HasMany(p => p.Relatives)
-                .WithOne(r => r.Patient)
-                .HasForeignKey(r => r.PatientId)
-                .OnDelete(DeleteBehavior.SetNull);
+            // Weight
+            builder.Property(p => p.Weight)
+                   .IsRequired()
+                   .HasColumnType("decimal(5,2)");
+
+            // BloodType
+            builder.Property(p => p.BloodType)
+                         .HasConversion<string>()
+                         .IsRequired();
+
+            // ChronicDisease
+            builder.Property(p => p.ChronicDisease)
+                   .IsRequired()
+                   .HasMaxLength(200);
+
+
         }
     }
 }

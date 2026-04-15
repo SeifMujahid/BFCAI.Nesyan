@@ -107,18 +107,18 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Doctors
         }
 
         [HttpGet("{id}/patients")]
-        public async Task<ActionResult<IEnumerable<PatientToReturnDto>>> GetDoctorPatients(int id)
-        {
-            try
-            {
-                var patients = await DoctorService.GetDoctorPatientsAsync(id);
-                return Ok(patients);
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
-        }
+        //public async Task<ActionResult<IEnumerable<PatientToReturnDto>>> GetDoctorPatients(int id)
+        //{
+        //    try
+        //    {
+        //        //var patients = await DoctorService.GetDoctorPatientsAsync(id);
+        //        return Ok(patients);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return NotFound(ex.Message);
+        //    }
+        //}
 
         [HttpGet("{id}/statistics")]
         public async Task<ActionResult<DoctorStatisticsDto>> GetDoctorStatistics(int id)
