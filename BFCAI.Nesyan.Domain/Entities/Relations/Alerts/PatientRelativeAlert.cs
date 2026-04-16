@@ -1,4 +1,5 @@
 ﻿using BFCAI.Nesyan.Domain.Entities.Alerts;
+using BFCAI.Nesyan.Domain.Entities.Common;
 using BFCAI.Nesyan.Domain.Entities.Primary.Patient;
 using BFCAI.Nesyan.Domain.Entities.Primary.Relative;
 
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BFCAI.Nesyan.Domain.Entities.Relations.Alerts
 {
-    public class PatientRelativeAlert
+    public class PatientRelativeAlert:BaseAuditableEntity<int>
     {
         public int PatientId { get; set; }
         public Patient Patient { get; set; } = null!;

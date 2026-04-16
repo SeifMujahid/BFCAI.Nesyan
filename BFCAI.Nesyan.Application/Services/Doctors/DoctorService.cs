@@ -4,6 +4,7 @@ using BFCAI.Nesyan.Application.Abstraction.Models.Patients;
 using BFCAI.Nesyan.Application.Abstraction.Services.Doctors;
 using BFCAI.Nesyan.Domain.Contracts;
 using BFCAI.Nesyan.Domain.Entities.Primary.Doctor;
+using BFCAI.Nesyan.Domain.Entities.Relations.Primary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,45 +71,46 @@ namespace BFCAI.Nesyan.Application.Services.Doctors
             await UnitOfWork.CompleteAsync();
         }
 
-        //public async Task<IEnumerable<PatientToReturnDto>> GetDoctorPatientsAsync(int doctorId)
-        //{
-            //var repo = UnitOfWork.GetRepository<Doctor, int>();
-            // Since repo now has GetTableNoTracking, we can include relationships using Microsoft.EntityFrameworkCore
-            // However, to keep repo patterns clean, we'll try a local query or rely on a specific repo query if Include is unavailable.
+        public async Task<IEnumerable<PatientToReturnDto>> GetDoctorPatientsAsync(int doctorId)
+        {
+            var repo = UnitOfWork.GetRepository<Doctor, int>();
+            //Since repo now has GetTableNoTracking, we can include relationships using Microsoft.EntityFrameworkCore
+            //However, to keep repo patterns clean, we'll try a local query or rely on a specific repo query if Include is unavailable.
             // As DoctorService has no EF Core dependency natively at the top level, we might have to use UnitOfWork context directly or query patient repo.
-            
-            // To abide by Clean Architecture without adding EntityFrameworkCore to Application Layer:
-            //var allDoctors = await repo.GetAllAsync(true);
-            //var doctor = allDoctors.FirstOrDefault(d => d.Id == doctorId);
-            
-            //if (doctor == null) throw new Exception("Doctor not found");
-            
-            // If lazy loading is enabled, doctor.Patients is populated. If not, this might be null.
+
+
+             //To abide by Clean Architecture without adding EntityFrameworkCore to Application Layer:
+            var allDoctors = await repo.GetAllAsync(true);
+            var doctor = allDoctors.FirstOrDefault(d => d.Id == doctorId);
+
+            if (doctor == null) throw new Exception("Doctor not found");
+
+            //If lazy loading is enabled, doctor.Patients is populated.If not, this might be null.
              //To be genuinely safe, I could query the TreatmentRequests for Accepted ones where DoctorId matches!
-            //var treatmentRepo = UnitOfWork.GetRepository<BFCAI.Nesyan.Domain.Entities.Primary.TreatmentRequests.TreatmentRequest, int>();
-            //var allRequests = await treatmentRepo.GetAllAsync(false);
-            //var acceptedPatientIds = allRequests.Where(r => r.DoctorId == doctorId && r.Status == BFCAI.Nesyan.Domain.Entities.Primary.TreatmentRequests.RequestStatus.Accepted).Select(r => r.PatientId).Distinct().ToList();
+            var treatmentRepo = UnitOfWork.GetRepository<RelativeDoctorRequest, int>();
+            var allRequests = await treatmentRepo.GetAllAsync(false);
+            var acceptedPatientIds = allRequests.Where(r => r.DoctorId == doctorId && r.Status == RequestStatus.Accepted).Select(r => r.PatientId).Distinct().ToList();
 
-            //var patientRepo = UnitOfWork.GetRepository<BFCAI.Nesyan.Domain.Entities.Primary.Patient.Patient, int>();
-            //var allPatients = await patientRepo.GetAllAsync(false);
-            
-            //var patients = allPatients.Where(p => acceptedPatientIds.Contains(p.Id)).ToList();
+            var patientRepo = UnitOfWork.GetRepository<BFCAI.Nesyan.Domain.Entities.Primary.Patient.Patient, int>();
+            var allPatients = await patientRepo.GetAllAsync(false);
 
-            //return Mapper.Map<IEnumerable<PatientToReturnDto>>(patients);
-        //}
+            var patients = allPatients.Where(p => acceptedPatientIds.Contains(p.Id)).ToList();
+
+            return Mapper.Map<IEnumerable<PatientToReturnDto>>(patients);
+        }
 
         public async Task<DoctorStatisticsDto> GetDoctorStatisticsAsync(int doctorId)
         {
-            //var trRepo = UnitOfWork.GetRepository<TreatmentRequest, int>();
-            //var allTR = await trRepo.GetAllAsync(false);
-            
-            //var totalPatients = allTR.Count(tr => tr.DoctorId == doctorId && tr.Status == RequestStatus.Accepted);
-            //var pendingRequests = allTR.Count(tr => tr.DoctorId == doctorId && tr.Status == RequestStatus.Pending);
+            var trRepo = UnitOfWork.GetRepository<RelativeDoctorRequest, int>();
+            var allTR = await trRepo.GetAllAsync(false);
+
+            var totalPatients = allTR.Count(tr => tr.DoctorId == doctorId && tr.Status == RequestStatus.Accepted);
+            var pendingRequests = allTR.Count(tr => tr.DoctorId == doctorId && tr.Status == RequestStatus.Pending);
 
             return new DoctorStatisticsDto
             {
-                //TotalPatients = totalPatients,
-                //PendingRequests = pendingRequests
+                TotalPatients = totalPatients,
+                PendingRequests = pendingRequests
             };
         }
     }

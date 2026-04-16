@@ -1,4 +1,6 @@
-﻿using BFCAI.Nesyan.Domain.Entities.Relations.Primary;
+﻿using BFCAI.Nesyan.Domain.Entities.Common;
+using BFCAI.Nesyan.Domain.Entities.Relations.Primary;
+using BFCAI.Nesyan.Infrastructure.Presistence.Data.Config.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -9,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Config.Relations.Primary
 {
-    internal class RelativeDoctorRequestConfigurations : IEntityTypeConfiguration<RelativeDoctorRequest>
+    internal class RelativeDoctorRequestConfigurations : BaseEntityConfigurations<RelativeDoctorRequest,int>
     {
-        public void Configure(EntityTypeBuilder<RelativeDoctorRequest> builder)
+        public override void Configure(EntityTypeBuilder<RelativeDoctorRequest> builder)
         {
             builder.HasKey(r => r.Id);
 

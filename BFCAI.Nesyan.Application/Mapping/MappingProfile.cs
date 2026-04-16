@@ -14,6 +14,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BFCAI.Nesyan.Domain.Entities.Relations.Primary;
+using BFCAI.Nesyan.Domain.Entities.MindGames;
+using BFCAI.Nesyan.Domain.Entities.Relations.MindGames;
 
 namespace BFCAI.Nesyan.Application.Mapping
 {
@@ -26,10 +29,10 @@ namespace BFCAI.Nesyan.Application.Mapping
                     .ForMember(dest => dest.Gender,
                     opt => opt.MapFrom(src => Enum.Parse<Gender>(src.Gender, true)));
 
-            //CreateMap<TreatmentRequest, TreatmentRequestToReturnDto>()
-                //.ForMember(d => d.Status, o => o.MapFrom(s => s.Status.ToString()));
+            CreateMap<RelativeDoctorRequest, TreatmentRequestToReturnDto>()
+                .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.ToString()));
 
-            //CreateMap<TreatmentRequestToCreateDto, TreatmentRequest>();
+            CreateMap<TreatmentRequestToCreateDto,RelativeDoctorRequest>();
 
             CreateMap<Patient, PatientToReturnDto>()
                 .ForMember(d => d.CurrentStageName, o => o.MapFrom(s => s.CurrentStage.ToString()));
@@ -44,8 +47,8 @@ namespace BFCAI.Nesyan.Application.Mapping
             //CreateMap<Medication, MedicationToReturnDto>();
 
             // Mind Games
-            //CreateMap<MindGame, MindGameDto>();
-            //CreateMap<PatientMindGame, PatientMindGameDto>();
+            CreateMap<MindGame, MindGameDto>();
+            CreateMap<MindGameSession, PatientMindGameDto>();
         }
     }
 }

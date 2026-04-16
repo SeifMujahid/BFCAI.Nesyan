@@ -1,4 +1,5 @@
-﻿using BFCAI.Nesyan.Domain.Entities.Primary.Doctor;
+﻿using BFCAI.Nesyan.Domain.Entities.Common;
+using BFCAI.Nesyan.Domain.Entities.Primary.Doctor;
 using BFCAI.Nesyan.Domain.Entities.Primary.Patient;
 using BFCAI.Nesyan.Domain.Entities.Primary.Relative;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BFCAI.Nesyan.Domain.Entities.Relations.Primary
 {
-    public class PatientDoctor
+    public class PatientDoctor:BaseEntity<int>
     {
         public int PatientId { get; set; }
         public Patient Patient { get; set; } = null!;

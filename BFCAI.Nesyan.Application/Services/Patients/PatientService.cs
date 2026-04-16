@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BFCAI.Nesyan.Domain.Entities.MindGames;
+using BFCAI.Nesyan.Domain.Entities.Relations.MindGames;
 
 namespace BFCAI.Nesyan.Application.Services.Patients
 {
@@ -37,23 +39,23 @@ namespace BFCAI.Nesyan.Application.Services.Patients
             var patient = await patientRepo.Get(patientId);
             if (patient == null) throw new Exception("Patient not found");
 
-            //var medRepo = UnitOfWork.GetRepository<Medication, int>();
-            //var allMeds = await medRepo.GetAllAsync(false);
-            //var meds = allMeds.Where(m => m.PatientId == patientId).ToList();
+            var medRepo = UnitOfWork.GetRepository<MindGameSession, int>();
+            var allMeds = await medRepo.GetAllAsync(false);
+            var meds = allMeds.Where(m => m.PatientId == patientId).ToList();
 
-            //var pgRepo = UnitOfWork.GetRepository<PatientMindGame, int>();
-            //var gameRepo = UnitOfWork.GetRepository<MindGame, int>();
+            var pgRepo = UnitOfWork.GetRepository<MindGameSession, int>();
+            var gameRepo = UnitOfWork.GetRepository<MindGame, int>();
 
-            //var allPG = await pgRepo.GetAllAsync(false);
-            //var patientGames = allPG.Where(pg => pg.PatientId == patientId).ToList();
+            var allPG = await pgRepo.GetAllAsync(false);
+            var patientGames = allPG.Where(pg => pg.PatientId == patientId).ToList();
 
-            //var gameDtos = Mapper.Map<List<PatientMindGameDto>>(patientGames);
-            //var allGames = await gameRepo.GetAllAsync(false);
-            //foreach (var g in gameDtos)
-            //{
-                //var gameEntity = allGames.FirstOrDefault(x => x.Id == g.MindGameId);
-                //if (gameEntity != null) g.MindGame = Mapper.Map<MindGameDto>(gameEntity);
-            //}
+            var gameDtos = Mapper.Map<List<PatientMindGameDto>>(patientGames);
+            var allGames = await gameRepo.GetAllAsync(false);
+            foreach (var g in gameDtos)
+            {
+                var gameEntity = allGames.FirstOrDefault(x => x.Id == g.MindGameId);
+                if (gameEntity != null) g.MindGame = Mapper.Map<MindGameDto>(gameEntity);
+            }
 
             var profileDto = Mapper.Map<PatientFullProfileDto>(patient);
             //profileDto.Medications = Mapper.Map<IEnumerable<MedicationToReturnDto>>(meds);

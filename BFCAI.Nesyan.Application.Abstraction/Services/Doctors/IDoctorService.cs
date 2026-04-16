@@ -15,7 +15,7 @@ namespace BFCAI.Nesyan.Application.Abstraction.Services.Doctors
         Task<DoctorToReturnDto> CreateDoctorAsync(DoctorToCreateDto doctorToCreate);
         Task UpdateDoctorAsync(DoctorToReturnDto doctorToUpdate);
         Task DeleteDoctorAsync(int id);
-        //Task<IEnumerable<PatientToReturnDto>> GetDoctorPatientsAsync(int doctorId);
+        Task<IEnumerable<PatientToReturnDto>> GetDoctorPatientsAsync(int doctorId);
         Task<DoctorStatisticsDto> GetDoctorStatisticsAsync(int doctorId);
     }
 }

@@ -1,4 +1,5 @@
-﻿using BFCAI.Nesyan.Domain.Entities.MindGames;
+﻿using BFCAI.Nesyan.Domain.Entities.Common;
+using BFCAI.Nesyan.Domain.Entities.MindGames;
 using BFCAI.Nesyan.Domain.Entities.Primary.Doctor;
 using BFCAI.Nesyan.Domain.Entities.Primary.Patient;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BFCAI.Nesyan.Domain.Entities.Relations.MindGames
 {
-    public class MindGameSession
+    public class MindGameSession:BaseAuditableEntity<int>
     {
         public int Id { get; set; }
         public int DoctorId { get; set; }

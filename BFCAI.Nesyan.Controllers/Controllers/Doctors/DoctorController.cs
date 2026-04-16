@@ -9,7 +9,7 @@ using BFCAI.Nesyan.Application.Abstraction.Models.Patients;
 
 namespace BFCAI.Nesyan.Controllers.Controllers.Doctors
 {
-    public class DoctorController(IDoctorService DoctorService):BaseApiController
+    public class DoctorController(IDoctorService DoctorService) : BaseApiController
     {
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DoctorToReturnDto>>> GetDoctors()
@@ -74,7 +74,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Doctors
                        new { id = doctor.Id },
                        doctor);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -107,31 +107,32 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Doctors
         }
 
         [HttpGet("{id}/patients")]
-        //public async Task<ActionResult<IEnumerable<PatientToReturnDto>>> GetDoctorPatients(int id)
-        //{
-        //    try
-        //    {
-        //        //var patients = await DoctorService.GetDoctorPatientsAsync(id);
-        //        return Ok(patients);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return NotFound(ex.Message);
-        //    }
-        //}
-
-        [HttpGet("{id}/statistics")]
-        public async Task<ActionResult<DoctorStatisticsDto>> GetDoctorStatistics(int id)
+        public async Task<ActionResult<IEnumerable<PatientToReturnDto>>> GetDoctorPatients(int id)
         {
             try
             {
-                var stats = await DoctorService.GetDoctorStatisticsAsync(id);
-                return Ok(stats);
+                var patients = await DoctorService.GetDoctorPatientsAsync(id);
+                return Ok(patients);
             }
             catch (Exception ex)
             {
-                return NotFound(new { message = ex.Message });
+                return NotFound(ex.Message);
             }
+            //}
+
+            //[HttpGet("{id}/statistics")]
+            //internal async Task<ActionResult<DoctorStatisticsDto>> GetDoctorStatistics(int id)
+            //{
+            //    try
+            //    {
+            //        var stats = await DoctorService.GetDoctorStatisticsAsync(id);
+            //        return Ok(stats);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        return NotFound(new { message = ex.Message });
+            //    }
+            //}
         }
     }
 }

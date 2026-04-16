@@ -1,4 +1,5 @@
-﻿using BFCAI.Nesyan.Domain.Entities.Primary.Doctor;
+﻿using BFCAI.Nesyan.Domain.Entities.Common;
+using BFCAI.Nesyan.Domain.Entities.Primary.Doctor;
 using BFCAI.Nesyan.Domain.Entities.Primary.Patient;
 using BFCAI.Nesyan.Domain.Entities.Primary.Relative;
 using System;
@@ -16,9 +17,8 @@ namespace BFCAI.Nesyan.Domain.Entities.Relations.Primary
         Rejected = 2,
         Selected = 3
     }
-    public class RelativeDoctorRequest
+    public class RelativeDoctorRequest:BaseAuditableEntity<int>
     {
-        public int Id { get; set; }
         public int PatientId { get; set; }
         public Patient Patient { get; set; } = null!;
         public int RelativeId { get; set; }

@@ -1,4 +1,5 @@
 ﻿using BFCAI.Nesyan.Domain.Entities.Relations.Alerts;
+using BFCAI.Nesyan.Infrastructure.Presistence.Data.Config.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -9,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Config.Relations.Alerts
 {
-    internal class PatientrelativeAlertConfigurations : IEntityTypeConfiguration<PatientRelativeAlert>
+    internal class PatientrelativeAlertConfigurations : BaseEntityConfigurations<PatientRelativeAlert,int>
     {
-        public void Configure(EntityTypeBuilder<PatientRelativeAlert> builder)
+        public override void Configure(EntityTypeBuilder<PatientRelativeAlert> builder)
         {
 
             builder.HasKey(x => new { x.PatientId, x.RelativeId, x.AlertId });

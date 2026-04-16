@@ -2,6 +2,7 @@
 using BFCAI.Nesyan.Domain.Entities.Primary.Doctor;
 using BFCAI.Nesyan.Domain.Entities.Primary.Patient;
 using BFCAI.Nesyan.Domain.Entities.Relations.MindGames;
+using BFCAI.Nesyan.Infrastructure.Presistence.Data.Config.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -12,9 +13,9 @@ using System.Threading.Tasks;
 
 namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Config.Relations.MindGames;
 
-public class MindGameSessionConfigurations : IEntityTypeConfiguration<MindGameSession>
+internal class MindGameSessionConfigurations : BaseEntityConfigurations<MindGameSession,int>
 {
-    public void Configure(EntityTypeBuilder<MindGameSession> builder)
+    public override void Configure(EntityTypeBuilder<MindGameSession> builder)
     {
         builder.HasOne(x => x.Doctor)
                .WithMany()
