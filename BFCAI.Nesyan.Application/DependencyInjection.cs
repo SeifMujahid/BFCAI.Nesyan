@@ -17,6 +17,8 @@ using System.Text;
 using System.Threading.Tasks;
 using BFCAI.Nesyan.Application.Services.Doctors;
 using BFCAI.Nesyan.Application.Services.TreatmentRequests;
+using BFCAI.Nesyan.Application.Abstraction.Services;
+using BFCAI.Nesyan.Application.Services;
 
 namespace BFCAI.Nesyan.Application
 {
@@ -28,12 +30,7 @@ namespace BFCAI.Nesyan.Application
             {
                 O.AddProfile<MappingProfile>();
             });
-            services.AddScoped(typeof(IDoctorService), typeof(DoctorService));
-            services.AddScoped(typeof(ITreatmentRequestService), typeof(TreatmentRequestService));
-            services.AddScoped(typeof(IPatientService), typeof(PatientService));
-            services.AddScoped(typeof(IMedicationService), typeof(MedicationService));
-            services.AddScoped(typeof(IMindGamesService), typeof(MindGamesService));
-            services.AddScoped(typeof(IAuthService), typeof(AuthService));
+            services.AddScoped(typeof(IServiceManager), typeof(Servicemanager));
             return services;
         }
     }

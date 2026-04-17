@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace BFCAI.Nesyan.Application.Abstraction.Models.Doctors
         public string Country { get; set; } = null!;
         public string City { get; set; } = null!;
         public int Age { get; set; }
-        public string GraduationDegree { get; set; } = null!;
-        public string MedicalAssociationCard { get; set; } = null!;
+        public IFormFile GraduationDegree { get; set; } = null!;
+        public IFormFile MedicalAssociationCard { get; set; } = null!;
     }
 }

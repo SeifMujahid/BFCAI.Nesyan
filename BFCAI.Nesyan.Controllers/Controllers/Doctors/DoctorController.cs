@@ -5,22 +5,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using BFCAI.Nesyan.Application.Abstraction.Models.Patients;
+using BFCAI.Nesyan.Application.Abstraction.Services;
 
 
 namespace BFCAI.Nesyan.Controllers.Controllers.Doctors
 {
-    public class DoctorController(IDoctorService DoctorService) : BaseApiController
+    public class DoctorController(IServiceManager serviceManager) : BaseApiController
     {
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DoctorToReturnDto>>> GetDoctors()
         {
-            var doctors = await DoctorService.GetDoctorsAsync();
+            var doctors = await serviceManager.DoctorService.GetDoctorsAsync();
             return Ok(doctors);
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<DoctorToReturnDto>> GetDoctor(int id)
         {
-            var doctor = await DoctorService.GetDoctorAsync(id);
+            var doctor = await serviceManager.DoctorService.GetDoctorAsync(id);
 
             if (doctor is null)
                 return NotFound($"Doctor with id {id} not found");
@@ -28,63 +29,26 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Doctors
             return Ok(doctor);
         }
         [HttpPost]
-        public async Task<ActionResult<DoctorToReturnDto>> CreateDoctor([FromForm] DoctorCreationRequest request)
+        public async Task<ActionResult<DoctorToReturnDto>> CreateDoctor([FromForm] DoctorToCreateDto request)
         {
             try
             {
-                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Uploads", "Doctors");
-                if (!Directory.Exists(uploadsFolder))
-                    Directory.CreateDirectory(uploadsFolder);
-
-                var gradDegreeFileName = Guid.NewGuid().ToString() + Path.GetExtension(request.GraduationDegreeFile.FileName);
-                var medCardFileName = Guid.NewGuid().ToString() + Path.GetExtension(request.MedicalAssociationCardFile.FileName);
-
-                var gradDegreePath = Path.Combine(uploadsFolder, gradDegreeFileName);
-                var medCardPath = Path.Combine(uploadsFolder, medCardFileName);
-
-                using (var stream = new FileStream(gradDegreePath, FileMode.Create))
-                {
-                    await request.GraduationDegreeFile.CopyToAsync(stream);
-                }
-
-                using (var stream = new FileStream(medCardPath, FileMode.Create))
-                {
-                    await request.MedicalAssociationCardFile.CopyToAsync(stream);
-                }
-
-                var dto = new DoctorToCreateDto
-                {
-                    NationalId = request.NationalId,
-                    FName = request.FName,
-                    LName = request.LName,
-                    UserName = request.UserName,
-                    Email = request.Email,
-                    Password = request.Password,
-                    Gender = request.Gender,
-                    Country = request.Country,
-                    City = request.City,
-                    Age = request.Age,
-                    GraduationDegree = $"/Uploads/Doctors/{gradDegreeFileName}",
-                    MedicalAssociationCard = $"/Uploads/Doctors/{medCardFileName}"
-                };
-
-                var doctor = await DoctorService.CreateDoctorAsync(dto);
-                return CreatedAtAction(
-                       nameof(GetDoctor),
-                       new { id = doctor.Id },
-                       doctor);
+                var doctor = await serviceManager.DoctorService.CreateDoctorAsync(request);
+                return Ok(doctor);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
+
+
         }
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateDoctor(DoctorToReturnDto dto)
         {
             try
             {
-                await DoctorService.UpdateDoctorAsync(dto);
+                await serviceManager.DoctorService.UpdateDoctorAsync(dto);
                 return NoContent(); // 204
             }
             catch (Exception ex)
@@ -97,7 +61,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Doctors
         {
             try
             {
-                await DoctorService.DeleteDoctorAsync(id);
+                await serviceManager.DoctorService.DeleteDoctorAsync(id);
                 return NoContent(); // 204
             }
             catch (Exception ex)
@@ -111,28 +75,27 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Doctors
         {
             try
             {
-                var patients = await DoctorService.GetDoctorPatientsAsync(id);
+                var patients = await serviceManager.DoctorService.GetDoctorPatientsAsync(id);
                 return Ok(patients);
             }
             catch (Exception ex)
             {
                 return NotFound(ex.Message);
             }
-            //}
+        }
 
-            //[HttpGet("{id}/statistics")]
-            //internal async Task<ActionResult<DoctorStatisticsDto>> GetDoctorStatistics(int id)
-            //{
-            //    try
-            //    {
-            //        var stats = await DoctorService.GetDoctorStatisticsAsync(id);
-            //        return Ok(stats);
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        return NotFound(new { message = ex.Message });
-            //    }
-            //}
+        [HttpGet("{id}/statistics")]
+            public async Task<ActionResult<DoctorStatisticsDto>> GetDoctorStatistics(int id)
+            {
+                try
+                {
+                    var stats = await serviceManager.DoctorService.GetDoctorStatisticsAsync(id);
+                    return Ok(stats);
+                }
+                catch (Exception ex)
+                {
+                    return NotFound(new { message = ex.Message });
+                }
+            }
         }
     }
-}

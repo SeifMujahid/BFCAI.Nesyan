@@ -4,6 +4,7 @@ using BFCAI.Nesyan.Application.Abstraction.Models.Patients;
 using BFCAI.Nesyan.Application.Abstraction.Services.Doctors;
 using BFCAI.Nesyan.Domain.Contracts;
 using BFCAI.Nesyan.Domain.Entities.Primary.Doctor;
+using BFCAI.Nesyan.Domain.Entities.Primary.Patient;
 using BFCAI.Nesyan.Domain.Entities.Relations.Primary;
 using System;
 using System.Collections.Generic;
@@ -29,25 +30,80 @@ namespace BFCAI.Nesyan.Application.Services.Doctors
         }
         public async Task<DoctorToReturnDto> CreateDoctorAsync(DoctorToCreateDto doctorToCreate)
         {
+            //var repo = UnitOfWork.GetRepository<Doctor, int>();
+
+            //// Validations 
+            //var existingDoctors = await repo.GetAllAsync();
+            //if (existingDoctors.Any(d => d.NationalId == doctorToCreate.NationalId))
+            //    throw new Exception("NationalId is already registered.");
+            //if (existingDoctors.Any(d => d.Email.Equals(doctorToCreate.Email, StringComparison.OrdinalIgnoreCase)))
+            //    throw new Exception("Email is already registered.");
+            //if (existingDoctors.Any(d => d.UserName.Equals(doctorToCreate.UserName, StringComparison.OrdinalIgnoreCase)))
+            //    throw new Exception("UserName is already taken.");
+
+            //var doctor = Mapper.Map<Doctor>(doctorToCreate);
+            ////doctor.CreatedOn = DateTime.UtcNow;
+            ////doctor.CreatedBy = doctor.UserName; // Or "System"
+            ////doctor.LastModifiedOn = DateTime.UtcNow;
+            ////doctor.LastModifiedBy = doctor.UserName;
+
+            //await repo.AddAsync(doctor);
+            //await UnitOfWork.CompleteAsync();
+            //return Mapper.Map<DoctorToReturnDto>(doctor);
             var repo = UnitOfWork.GetRepository<Doctor, int>();
-            
-            // Uniqueness Validations
+
+            // Validation
             var existingDoctors = await repo.GetAllAsync();
+
             if (existingDoctors.Any(d => d.NationalId == doctorToCreate.NationalId))
                 throw new Exception("NationalId is already registered.");
+
             if (existingDoctors.Any(d => d.Email.Equals(doctorToCreate.Email, StringComparison.OrdinalIgnoreCase)))
                 throw new Exception("Email is already registered.");
+
             if (existingDoctors.Any(d => d.UserName.Equals(doctorToCreate.UserName, StringComparison.OrdinalIgnoreCase)))
                 throw new Exception("UserName is already taken.");
 
+            // 📁 File Upload Logic هنا بدل controller
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Uploads", "Doctors");
+
+            if (!Directory.Exists(uploadsFolder))
+                Directory.CreateDirectory(uploadsFolder);
+
+            string gradDegreeFileName = null;
+            string medCardFileName = null;
+
+            if (doctorToCreate.GraduationDegree != null)
+            {
+                gradDegreeFileName = Guid.NewGuid() + Path.GetExtension(doctorToCreate.GraduationDegree.FileName);
+                var path = Path.Combine(uploadsFolder, gradDegreeFileName);
+
+                using var stream = new FileStream(path, FileMode.Create);
+                await doctorToCreate.GraduationDegree.CopyToAsync(stream);
+            }
+
+            if (doctorToCreate.MedicalAssociationCard != null)
+            {
+                medCardFileName = Guid.NewGuid() + Path.GetExtension(doctorToCreate.MedicalAssociationCard.FileName);
+                var path = Path.Combine(uploadsFolder, medCardFileName);
+
+                using var stream = new FileStream(path, FileMode.Create);
+                await doctorToCreate.MedicalAssociationCard.CopyToAsync(stream);
+            }
+
+            // 🧠 Map entity
             var doctor = Mapper.Map<Doctor>(doctorToCreate);
             doctor.CreatedOn = DateTime.UtcNow;
             doctor.CreatedBy = doctor.UserName; // Or "System"
             doctor.LastModifiedOn = DateTime.UtcNow;
             doctor.LastModifiedBy = doctor.UserName;
 
+            doctor.GraduationDegree = gradDegreeFileName!;
+            doctor.MedicalAssociationCard = medCardFileName!;
+
             await repo.AddAsync(doctor);
             await UnitOfWork.CompleteAsync();
+
             return Mapper.Map<DoctorToReturnDto>(doctor);
         }
         public async Task UpdateDoctorAsync(DoctorToReturnDto doctorToUpdate)
@@ -80,7 +136,7 @@ namespace BFCAI.Nesyan.Application.Services.Doctors
 
 
              //To abide by Clean Architecture without adding EntityFrameworkCore to Application Layer:
-            var allDoctors = await repo.GetAllAsync(true);
+            var allDoctors = await repo.GetAllAsync();
             var doctor = allDoctors.FirstOrDefault(d => d.Id == doctorId);
 
             if (doctor == null) throw new Exception("Doctor not found");
@@ -88,11 +144,11 @@ namespace BFCAI.Nesyan.Application.Services.Doctors
             //If lazy loading is enabled, doctor.Patients is populated.If not, this might be null.
              //To be genuinely safe, I could query the TreatmentRequests for Accepted ones where DoctorId matches!
             var treatmentRepo = UnitOfWork.GetRepository<RelativeDoctorRequest, int>();
-            var allRequests = await treatmentRepo.GetAllAsync(false);
+            var allRequests = await treatmentRepo.GetAllAsync();
             var acceptedPatientIds = allRequests.Where(r => r.DoctorId == doctorId && r.Status == RequestStatus.Accepted).Select(r => r.PatientId).Distinct().ToList();
 
-            var patientRepo = UnitOfWork.GetRepository<BFCAI.Nesyan.Domain.Entities.Primary.Patient.Patient, int>();
-            var allPatients = await patientRepo.GetAllAsync(false);
+            var patientRepo = UnitOfWork.GetRepository<Patient, int>();
+            var allPatients = await patientRepo.GetAllAsync();
 
             var patients = allPatients.Where(p => acceptedPatientIds.Contains(p.Id)).ToList();
 
@@ -102,7 +158,7 @@ namespace BFCAI.Nesyan.Application.Services.Doctors
         public async Task<DoctorStatisticsDto> GetDoctorStatisticsAsync(int doctorId)
         {
             var trRepo = UnitOfWork.GetRepository<RelativeDoctorRequest, int>();
-            var allTR = await trRepo.GetAllAsync(false);
+            var allTR = await trRepo.GetAllAsync();
 
             var totalPatients = allTR.Count(tr => tr.DoctorId == doctorId && tr.Status == RequestStatus.Accepted);
             var pendingRequests = allTR.Count(tr => tr.DoctorId == doctorId && tr.Status == RequestStatus.Pending);
