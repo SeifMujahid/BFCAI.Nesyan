@@ -1,10 +1,10 @@
 using BFCAI.Nesyan.Domain.Entities.Alerts;
 using BFCAI.Nesyan.Domain.Entities.Medications;
 using BFCAI.Nesyan.Domain.Entities.MindGames;
-using BFCAI.Nesyan.Domain.Entities.Primary.Doctor;
-using BFCAI.Nesyan.Domain.Entities.Primary.Patient;
-using BFCAI.Nesyan.Domain.Entities.Primary.Relative;
-using BFCAI.Nesyan.Domain.Entities.Primary.Caregiver;
+using BFCAI.Nesyan.Domain.Entities.Primary.Doctors;
+using BFCAI.Nesyan.Domain.Entities.Primary.Patients;
+using BFCAI.Nesyan.Domain.Entities.Primary.Relatives;
+using BFCAI.Nesyan.Domain.Entities.Primary.Caregivers;
 using BFCAI.Nesyan.Domain.Entities.Relations.Alerts;
 using BFCAI.Nesyan.Domain.Entities.Relations.MindGames;
 using BFCAI.Nesyan.Domain.Entities.Relations.Primary;
@@ -34,7 +34,6 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.Data
         public DbSet<Relative> Relatives { get; set; }
         public DbSet<Caregiver> Caregivers { get; set; }
         public DbSet<RelativeDoctorRequest> RelativeDoctorRequests { get; set; }
-        public DbSet<PatientDoctor>PatientDoctors { get; set; }
         public DbSet<PatientRelative>PatientRelatives { get; set; }
         public DbSet<Alert>Alerts { get; set; }
         public DbSet<PatientRelativeAlert>PatientRelativeAlerts { get; set; }

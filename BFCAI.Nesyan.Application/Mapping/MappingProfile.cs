@@ -1,10 +1,10 @@
 using AutoMapper;
 using BFCAI.Nesyan.Application.Abstraction.Models.Doctors;
 using BFCAI.Nesyan.Domain.Entities.Primary;
-using BFCAI.Nesyan.Domain.Entities.Primary.Doctor;
+using BFCAI.Nesyan.Domain.Entities.Primary.Doctors;
 using BFCAI.Nesyan.Application.Abstraction.Models.TreatmentRequests;
 using BFCAI.Nesyan.Application.Abstraction.Models.Patients;
-using BFCAI.Nesyan.Domain.Entities.Primary.Patient;
+using BFCAI.Nesyan.Domain.Entities.Primary.Patients;
 using BFCAI.Nesyan.Application.Abstraction.Models.Medications;
 
 using BFCAI.Nesyan.Application.Abstraction.Models.MindGames;

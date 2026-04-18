@@ -1,4 +1,4 @@
-﻿using BFCAI.Nesyan.Domain.Entities.Primary.Doctor;
+﻿using BFCAI.Nesyan.Domain.Entities.Primary.Doctors;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;

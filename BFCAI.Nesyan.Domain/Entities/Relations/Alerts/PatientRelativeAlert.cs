@@ -1,7 +1,7 @@
 ﻿using BFCAI.Nesyan.Domain.Entities.Alerts;
 using BFCAI.Nesyan.Domain.Entities.Common;
-using BFCAI.Nesyan.Domain.Entities.Primary.Patient;
-using BFCAI.Nesyan.Domain.Entities.Primary.Relative;
+using BFCAI.Nesyan.Domain.Entities.Primary.Patients;
+using BFCAI.Nesyan.Domain.Entities.Primary.Relatives;
 
 using System;
 using System.Collections.Generic;

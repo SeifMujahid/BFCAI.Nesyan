@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using BFCAI.Nesyan.Domain.Entities.Primary.Patient;
+using BFCAI.Nesyan.Domain.Entities.Primary.Patients;
 
 namespace BFCAI.Nesyan.Application.Abstraction.Models.Auth
 {

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace BFCAI.Nesyan.Infrastructure.Presistence.Migrations
+namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Migrations
 {
     /// <inheritdoc />
     public partial class AddCaregiverTable : Migration

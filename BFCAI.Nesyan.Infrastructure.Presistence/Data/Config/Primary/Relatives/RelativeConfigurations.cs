@@ -1,4 +1,4 @@
-using BFCAI.Nesyan.Domain.Entities.Primary.Relative;
+using BFCAI.Nesyan.Domain.Entities.Primary.Relatives;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

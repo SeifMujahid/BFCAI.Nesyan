@@ -1,6 +1,6 @@
 ﻿
-using BFCAI.Nesyan.Domain.Entities.Primary.Doctor;
-using BFCAI.Nesyan.Domain.Entities.Primary.Patient;
+using BFCAI.Nesyan.Domain.Entities.Primary.Doctors;
+using BFCAI.Nesyan.Domain.Entities.Primary.Patients;
 using BFCAI.Nesyan.Domain.Entities.Relations.MindGames;
 using BFCAI.Nesyan.Infrastructure.Presistence.Data.Config.Base;
 using Microsoft.EntityFrameworkCore;

@@ -1,4 +1,5 @@
 ﻿
+using BFCAI.Nesyan.Domain.Entities.Primary.Doctors;
 using BFCAI.Nesyan.Domain.Entities.Relations;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-namespace BFCAI.Nesyan.Domain.Entities.Primary.Patient
+namespace BFCAI.Nesyan.Domain.Entities.Primary.Patients
 {
     public enum AlzheimerStage
     {
@@ -32,6 +33,9 @@ namespace BFCAI.Nesyan.Domain.Entities.Primary.Patient
         public double Weight { get; set; }
         public BloodType BloodType { get; set; }
         public string ChronicDisease { get; set; } = null!;
+
+        public int? DoctorId { get; set; }
+        public Doctor? Doctor { get; set; }
 
 
     }

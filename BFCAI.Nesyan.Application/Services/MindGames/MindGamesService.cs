@@ -3,6 +3,8 @@ using BFCAI.Nesyan.Application.Abstraction.Models.MindGames;
 using BFCAI.Nesyan.Application.Abstraction.Services.MindGames;
 using BFCAI.Nesyan.Domain.Contracts;
 using BFCAI.Nesyan.Domain.Entities.MindGames;
+using BFCAI.Nesyan.Domain.Entities.Primary.Doctors;
+using BFCAI.Nesyan.Domain.Entities.Primary.Patients;
 using BFCAI.Nesyan.Domain.Entities.Relations.MindGames;
 using BFCAI.Nesyan.Domain.Entities.Relations.Primary;
 using System;
@@ -46,8 +48,8 @@ namespace BFCAI.Nesyan.Application.Services.MindGames
         public async Task AssignGameToPatientAsync(int patientId, int gameId, AssignMindGameDto dto)
         {
             var repo = UnitOfWork.GetRepository<MindGameSession, int>();
-            var doctorRepo = UnitOfWork.GetRepository<BFCAI.Nesyan.Domain.Entities.Primary.Doctor.Doctor, int>();
-            var patientRepo = UnitOfWork.GetRepository<BFCAI.Nesyan.Domain.Entities.Primary.Patient.Patient, int>();
+            var doctorRepo = UnitOfWork.GetRepository<Doctor, int>();
+            var patientRepo = UnitOfWork.GetRepository<Patient, int>();
             var gameRepo = UnitOfWork.GetRepository<MindGame, int>();
 
             var allAssignments = await repo.GetAllAsync(false);

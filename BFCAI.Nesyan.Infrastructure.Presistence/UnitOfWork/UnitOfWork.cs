@@ -2,6 +2,7 @@
 using BFCAI.Nesyan.Domain.Entities.Common;
 using BFCAI.Nesyan.Infrastructure.Presistence.Data;
 using BFCAI.Nesyan.Infrastructure.Presistence.Repository;
+using BFCAI.Nesyan.Infrastructure.Presistence.Repository.GenericRepositories;
 using System.Collections.Concurrent;
 
 namespace BFCAI.Nesyan.Infrastructure.Presistence.UnitOfWork

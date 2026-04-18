@@ -3,9 +3,10 @@ using BFCAI.Nesyan.Application.Abstraction.Models.Doctors;
 using BFCAI.Nesyan.Application.Abstraction.Models.Patients;
 using BFCAI.Nesyan.Application.Abstraction.Services.Doctors;
 using BFCAI.Nesyan.Domain.Contracts;
-using BFCAI.Nesyan.Domain.Entities.Primary.Doctor;
-using BFCAI.Nesyan.Domain.Entities.Primary.Patient;
+using BFCAI.Nesyan.Domain.Entities.Primary.Doctors;
+using BFCAI.Nesyan.Domain.Entities.Primary.Patients;
 using BFCAI.Nesyan.Domain.Entities.Relations.Primary;
+using BFCAI.Nesyan.Domain.Specifications.Doctors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,38 +19,21 @@ namespace BFCAI.Nesyan.Application.Services.Doctors
     {
         public async Task<IEnumerable<DoctorToReturnDto>> GetDoctorsAsync()
         {
-            var doctors =await UnitOfWork.GetRepository<Doctor, int>().GetAllAsync();
+            var specs = new DoctorSpecs();
+            var doctors =await UnitOfWork.GetRepository<Doctor, int>().GetAllWithSpecAsync(specs);
             var doctorsToReturn = Mapper.Map<IEnumerable<DoctorToReturnDto>>(doctors);
             return doctorsToReturn;
         }
         public async Task<DoctorToReturnDto> GetDoctorAsync(int id)
         {
-            var doctor =await UnitOfWork.GetRepository<Doctor, int>().Get(id);
+            var specs = new DoctorSpecs(id);
+            var doctor =await UnitOfWork.GetRepository<Doctor, int>().GetWithSpecAsync(specs);
             var doctorToReturn = Mapper.Map<DoctorToReturnDto>(doctor);
             return doctorToReturn;
         }
         public async Task<DoctorToReturnDto> CreateDoctorAsync(DoctorToCreateDto doctorToCreate)
         {
-            //var repo = UnitOfWork.GetRepository<Doctor, int>();
 
-            //// Validations 
-            //var existingDoctors = await repo.GetAllAsync();
-            //if (existingDoctors.Any(d => d.NationalId == doctorToCreate.NationalId))
-            //    throw new Exception("NationalId is already registered.");
-            //if (existingDoctors.Any(d => d.Email.Equals(doctorToCreate.Email, StringComparison.OrdinalIgnoreCase)))
-            //    throw new Exception("Email is already registered.");
-            //if (existingDoctors.Any(d => d.UserName.Equals(doctorToCreate.UserName, StringComparison.OrdinalIgnoreCase)))
-            //    throw new Exception("UserName is already taken.");
-
-            //var doctor = Mapper.Map<Doctor>(doctorToCreate);
-            ////doctor.CreatedOn = DateTime.UtcNow;
-            ////doctor.CreatedBy = doctor.UserName; // Or "System"
-            ////doctor.LastModifiedOn = DateTime.UtcNow;
-            ////doctor.LastModifiedBy = doctor.UserName;
-
-            //await repo.AddAsync(doctor);
-            //await UnitOfWork.CompleteAsync();
-            //return Mapper.Map<DoctorToReturnDto>(doctor);
             var repo = UnitOfWork.GetRepository<Doctor, int>();
 
             // Validation
@@ -130,19 +114,13 @@ namespace BFCAI.Nesyan.Application.Services.Doctors
         public async Task<IEnumerable<PatientToReturnDto>> GetDoctorPatientsAsync(int doctorId)
         {
             var repo = UnitOfWork.GetRepository<Doctor, int>();
-            //Since repo now has GetTableNoTracking, we can include relationships using Microsoft.EntityFrameworkCore
-            //However, to keep repo patterns clean, we'll try a local query or rely on a specific repo query if Include is unavailable.
-            // As DoctorService has no EF Core dependency natively at the top level, we might have to use UnitOfWork context directly or query patient repo.
 
-
-             //To abide by Clean Architecture without adding EntityFrameworkCore to Application Layer:
             var allDoctors = await repo.GetAllAsync();
             var doctor = allDoctors.FirstOrDefault(d => d.Id == doctorId);
 
             if (doctor == null) throw new Exception("Doctor not found");
 
-            //If lazy loading is enabled, doctor.Patients is populated.If not, this might be null.
-             //To be genuinely safe, I could query the TreatmentRequests for Accepted ones where DoctorId matches!
+
             var treatmentRepo = UnitOfWork.GetRepository<RelativeDoctorRequest, int>();
             var allRequests = await treatmentRepo.GetAllAsync();
             var acceptedPatientIds = allRequests.Where(r => r.DoctorId == doctorId && r.Status == RequestStatus.Accepted).Select(r => r.PatientId).Distinct().ToList();

@@ -1,4 +1,4 @@
-using BFCAI.Nesyan.Domain.Entities.Primary.Patient;
+using BFCAI.Nesyan.Domain.Entities.Primary.Patients;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -9,6 +9,10 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Config.Primary.Patients
         public override void Configure(EntityTypeBuilder<Patient> builder)
         {
             base.Configure(builder);
+            builder.HasOne(p => p.Doctor)
+                   .WithMany(d => d.Patients)
+                   .HasForeignKey(p => p.DoctorId)
+                   .OnDelete(DeleteBehavior.SetNull);
 
             builder.Property(p => p.BloodType)
                 .IsRequired()

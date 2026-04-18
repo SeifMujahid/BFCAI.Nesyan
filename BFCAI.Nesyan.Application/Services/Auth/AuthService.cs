@@ -1,10 +1,10 @@
 using BFCAI.Nesyan.Application.Abstraction.Services.Auth;
 using BFCAI.Nesyan.Application.Abstraction.Models.Auth;
 using BFCAI.Nesyan.Domain.Entities.Primary;
-using BFCAI.Nesyan.Domain.Entities.Primary.Caregiver;
-using BFCAI.Nesyan.Domain.Entities.Primary.Doctor;
-using BFCAI.Nesyan.Domain.Entities.Primary.Patient;
-using BFCAI.Nesyan.Domain.Entities.Primary.Relative;
+using BFCAI.Nesyan.Domain.Entities.Primary.Caregivers;
+using BFCAI.Nesyan.Domain.Entities.Primary.Doctors;
+using BFCAI.Nesyan.Domain.Entities.Primary.Patients;
+using BFCAI.Nesyan.Domain.Entities.Primary.Relatives;
 using BFCAI.Nesyan.Domain.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

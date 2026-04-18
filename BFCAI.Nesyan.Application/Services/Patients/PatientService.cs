@@ -4,7 +4,7 @@ using BFCAI.Nesyan.Application.Abstraction.Models.MindGames;
 
 using BFCAI.Nesyan.Application.Abstraction.Services.Patients;
 using BFCAI.Nesyan.Domain.Contracts;
-using BFCAI.Nesyan.Domain.Entities.Primary.Patient;
+using BFCAI.Nesyan.Domain.Entities.Primary.Patients;
 using AutoMapper;
 using System;
 using System.Collections.Generic;

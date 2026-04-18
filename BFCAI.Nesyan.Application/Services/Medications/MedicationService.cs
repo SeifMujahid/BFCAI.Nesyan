@@ -2,8 +2,8 @@ using BFCAI.Nesyan.Application.Abstraction.Models.Medications;
 using BFCAI.Nesyan.Application.Abstraction.Services.Medications;
 using BFCAI.Nesyan.Domain.Contracts;
 using BFCAI.Nesyan.Domain.Entities.Medications;
-using BFCAI.Nesyan.Domain.Entities.Primary.Doctor;
-using BFCAI.Nesyan.Domain.Entities.Primary.Patient;
+using BFCAI.Nesyan.Domain.Entities.Primary.Doctors;
+using BFCAI.Nesyan.Domain.Entities.Primary.Patients;
 using AutoMapper;
 
 namespace BFCAI.Nesyan.Application.Services.Medications

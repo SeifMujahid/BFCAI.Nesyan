@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BFCAI.Nesyan.Application.Abstraction.Models.Patients;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -19,5 +20,6 @@ namespace BFCAI.Nesyan.Application.Abstraction.Models.Doctors
         public int Age { get; set; }
         public string GraduationDegree { get; set; } = null!;
         public string MedicalAssociationCard { get; set; } = null!;
+        public ICollection<PatientToReturnDto>? Patients { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BFCAI.Nesyan.Domain.Entities.Primary.Relative
+namespace BFCAI.Nesyan.Domain.Entities.Primary.Relatives
 {
     public class Relative:User
     {

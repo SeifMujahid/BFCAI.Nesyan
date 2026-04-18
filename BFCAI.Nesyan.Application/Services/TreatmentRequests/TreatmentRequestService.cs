@@ -2,9 +2,9 @@ using AutoMapper;
 using BFCAI.Nesyan.Application.Abstraction.Models.TreatmentRequests;
 using BFCAI.Nesyan.Application.Abstraction.Services.TreatmentRequests;
 using BFCAI.Nesyan.Domain.Contracts;
-using BFCAI.Nesyan.Domain.Entities.Primary.Doctor;
-using BFCAI.Nesyan.Domain.Entities.Primary.Patient;
-using BFCAI.Nesyan.Domain.Entities.Primary.Relative;
+using BFCAI.Nesyan.Domain.Entities.Primary.Doctors;
+using BFCAI.Nesyan.Domain.Entities.Primary.Patients;
+using BFCAI.Nesyan.Domain.Entities.Primary.Relatives;
 using BFCAI.Nesyan.Domain.Entities.Relations.Primary;
 
 namespace BFCAI.Nesyan.Application.Services.TreatmentRequests
@@ -74,7 +74,7 @@ namespace BFCAI.Nesyan.Application.Services.TreatmentRequests
 
             var doctor = await doctorRepo.Get(request.DoctorId);
             var patient = await patientRepo.Get(request.PatientId);
-            var patientDoctorRepo = UnitOfWork.GetRepository<PatientDoctor, int>();
+
             //var doctorPatientsList = await patientDoctorRepo.GetAllAsync(doctor.Id);
             //if (doctor != null && patient != null)
             //{

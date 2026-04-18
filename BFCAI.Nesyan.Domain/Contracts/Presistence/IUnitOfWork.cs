@@ -1,5 +1,5 @@
 ﻿using BFCAI.Nesyan.Domain.Entities.Common;
-using BFCAI.Nesyan.Domain.Entities.Primary.Doctor;
+using BFCAI.Nesyan.Domain.Entities.Primary.Doctors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
