@@ -1,6 +1,7 @@
 using BFCAI.Nesyan.Application.Abstraction.Models.Caregivers;
 using BFCAI.Nesyan.Application.Abstraction.Services;
 using BFCAI.Nesyan.Controllers.Controllers.Base;
+using BFCAI.Nesyan.Controllers.Errors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Caregivers
             }
             catch (Exception ex)
             {
-                return NotFound($"Caregiver with id {id} not found: {ex.Message}");
+                return NotFound(new ApiResponse(404));
             }
         }
 
@@ -55,7 +56,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Caregivers
             }
             catch (Exception ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new ApiResponse(404));
             }
         }
 
@@ -69,7 +70,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Caregivers
             }
             catch (Exception ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new ApiResponse(404));
             }
         }
     }

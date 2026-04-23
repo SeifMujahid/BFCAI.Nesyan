@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using BFCAI.Nesyan.Controllers.Errors;
+using BFCAI.Nesyan.APIs.Middlewares;
 
 namespace BFCAI.Nesyan.APIs
 {
@@ -19,6 +21,25 @@ namespace BFCAI.Nesyan.APIs
             // Add services to the container.
             builder.Services
                 .AddControllers()
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.SuppressModelStateInvalidFilter = false;
+                    options.InvalidModelStateResponseFactory = context =>
+                        {
+                            var errors = context.ModelState.Where(P => P.Value!.Errors.Count > 0)
+                            .Select(P => new ApiValidationErrorResponse.ValidationError
+                            {
+                                Field = P.Key,
+                                Errors = P.Value!.Errors.Select(E => E.ErrorMessage)
+                            });
+                            return new BadRequestObjectResult(new ApiValidationErrorResponse
+                            {
+                                Errors = errors
+
+                            });
+                        };
+
+                })
                 .AddApplicationPart(typeof(Controllers.AssemblyInformation).Assembly);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -57,7 +78,7 @@ namespace BFCAI.Nesyan.APIs
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseMiddleware<ExceptionHandllerMiddleware>();
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
