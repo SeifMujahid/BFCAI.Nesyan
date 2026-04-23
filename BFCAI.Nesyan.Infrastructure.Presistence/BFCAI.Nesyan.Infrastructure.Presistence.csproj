@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BFCAI.Nesyan.Application.Abstraction\BFCAI.Nesyan.Application.Abstraction.csproj" />
     <ProjectReference Include="..\BFCAI.Nesyan.Domain\BFCAI.Nesyan.Domain.csproj" />
   </ItemGroup>
 

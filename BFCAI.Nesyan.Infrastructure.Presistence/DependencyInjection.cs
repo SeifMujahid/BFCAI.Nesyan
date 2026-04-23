@@ -15,10 +15,16 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence
     {
         public static IServiceCollection AddPresistenceService(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<StoreContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<StoreContext>((sp, options) =>
+            {
+                var interceptor = sp.GetRequiredService<CustomSaveChangeInterceptor>();
+
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
+                       .AddInterceptors(interceptor);
+            });
             services.AddScoped(typeof(IStoreContextInitializer), typeof(StoreContextinitializer));
-            services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork.UnitOfWork)); 
+            services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork.UnitOfWork));
+            services.AddScoped<CustomSaveChangeInterceptor>();
             return services;
         }
 

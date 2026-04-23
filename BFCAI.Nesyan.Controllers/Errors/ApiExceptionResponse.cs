@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace BFCAI.Nesyan.Controllers.Errors
@@ -16,7 +17,8 @@ namespace BFCAI.Nesyan.Controllers.Errors
         }
         public override string ToString()
         {
-            return base.ToString();
+            return JsonSerializer.Serialize(this, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+
         }
 
     }
