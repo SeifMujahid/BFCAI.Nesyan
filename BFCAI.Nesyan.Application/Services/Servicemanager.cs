@@ -14,6 +14,8 @@ using BFCAI.Nesyan.Application.Services.Patients;
 using BFCAI.Nesyan.Application.Services.TreatmentRequests;
 using BFCAI.Nesyan.Application.Services.Relatives;
 using BFCAI.Nesyan.Application.Services.Caregivers;
+using BFCAI.Nesyan.Application.Abstraction.Services.IoT;
+using BFCAI.Nesyan.Application.Services.IoT;
 using BFCAI.Nesyan.Domain.Contracts;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -37,10 +39,11 @@ namespace BFCAI.Nesyan.Application.Services
         private readonly Lazy<IAuthService> _authService;
         private readonly Lazy<BFCAI.Nesyan.Application.Abstraction.Services.Relatives.IRelativeService> _relativeService;
         private readonly Lazy<BFCAI.Nesyan.Application.Abstraction.Services.Caregivers.ICaregiverService> _caregiverService;
+        private readonly Lazy<ITelemetryService> _telemetryService;
 
         private readonly IEmailService _emailService;
 
-        public Servicemanager(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration configuration, IEmailService emailService)
+        public Servicemanager(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration configuration, IEmailService emailService, ITelemetryStore telemetryStore)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -54,6 +57,7 @@ namespace BFCAI.Nesyan.Application.Services
             _mindGamesService = new Lazy<IMindGamesService>(() => new MindGamesService(_unitOfWork,mapper));
             _relativeService = new Lazy<BFCAI.Nesyan.Application.Abstraction.Services.Relatives.IRelativeService>(() => new RelativeService(_unitOfWork, _mapper));
             _caregiverService = new Lazy<BFCAI.Nesyan.Application.Abstraction.Services.Caregivers.ICaregiverService>(() => new CaregiverService(_unitOfWork, _mapper));
+            _telemetryService = new Lazy<ITelemetryService>(() => new TelemetryService(telemetryStore, _unitOfWork));
         }
         public IDoctorService DoctorService => _doctorService.Value;
 
@@ -69,5 +73,6 @@ namespace BFCAI.Nesyan.Application.Services
         
         public BFCAI.Nesyan.Application.Abstraction.Services.Relatives.IRelativeService RelativeService => _relativeService.Value;
         public BFCAI.Nesyan.Application.Abstraction.Services.Caregivers.ICaregiverService CaregiverService => _caregiverService.Value;
+        public ITelemetryService TelemetryService => _telemetryService.Value;
     }
 }

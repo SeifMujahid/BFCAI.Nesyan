@@ -22,5 +22,6 @@ namespace BFCAI.Nesyan.Application.Abstraction.Services
         public IAuthService AuthService { get; }
         public BFCAI.Nesyan.Application.Abstraction.Services.Relatives.IRelativeService RelativeService { get; }
         public BFCAI.Nesyan.Application.Abstraction.Services.Caregivers.ICaregiverService CaregiverService { get; }
+        public BFCAI.Nesyan.Application.Abstraction.Services.IoT.ITelemetryService TelemetryService { get; }
     }
 }

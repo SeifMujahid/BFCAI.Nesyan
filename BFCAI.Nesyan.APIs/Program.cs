@@ -44,6 +44,8 @@ namespace BFCAI.Nesyan.APIs
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddSignalR();
+            builder.Services.AddScoped<BFCAI.Nesyan.Application.Abstraction.Services.IoT.ITelemetryNotifier, BFCAI.Nesyan.APIs.Hubs.SignalRTelemetryNotifier>();
 
             builder.Services.AddPresistenceService(builder.Configuration);
             builder.Services.AddApplicationService();
@@ -79,13 +81,14 @@ namespace BFCAI.Nesyan.APIs
                 app.UseSwaggerUI();
             }
             app.UseMiddleware<ExceptionHandllerMiddleware>();
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection(); // Commented out to allow ESP32 HTTP traffic without 307 redirects
 
             app.UseAuthentication();
             app.UseAuthorization();
 
 
             app.MapControllers();
+            app.MapHub<BFCAI.Nesyan.APIs.Hubs.TelemetryHub>("/telemetryHub");
 
             app.Run();
             #endregion
