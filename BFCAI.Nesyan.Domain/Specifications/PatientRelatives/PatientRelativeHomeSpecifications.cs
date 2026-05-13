@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace BFCAI.Nesyan.Domain.Specifications.PatientRelatives
 {
-    public class PatientRelativeHomeSpecifications:BaseSpecifications<PatientRelative, int>
+    public class PatientRelativeHomeSpecifications:RelativePatientCheckSpecifications
     {
-        public PatientRelativeHomeSpecifications(int relativeId)
+        public PatientRelativeHomeSpecifications(int relativeId):base(relativeId)
         {
-            Criteria = pr => pr.RelativeId == relativeId;
+
             AddIncludes();
         }
-        public PatientRelativeHomeSpecifications(int relativeId, int patientId)
+        public PatientRelativeHomeSpecifications(int relativeId, int patientId):base(relativeId, patientId)
         {
             Criteria = pr => pr.RelativeId == relativeId &&
                              pr.PatientId == patientId;

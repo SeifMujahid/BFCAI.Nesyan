@@ -1,4 +1,5 @@
 ﻿using BFCAI.Nesyan.Application.Abstraction.Models._Relations.RelativePatient;
+using BFCAI.Nesyan.Application.Abstraction.Models.Reminders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,16 +13,10 @@ namespace BFCAI.Nesyan.Application.Abstraction.Services._Relations
         public Task<RelativePatientsDto> GetRelativePatients(int relativeId);
         public Task<RelativePatientHomeDto> GetPatientHomeAsync(int relativeId, int patientId);
         public  Task<RelativePatientRemindersDto> GetPatientReminders(int relativeId, int patientId, int reminderType);
-        //Task<IEnumerable<ReminderDto>> GetPatientRemindersAsync(int relativeId, int patientId);
+        public Task UpdateReminder(int relativeId, int patientId, int reminderId, ReminderToUpdateDto dto);
+        public Task CreateReminder(int relativeId, int patientId, ReminderToCreateDto dto);
 
-        //Task<ReminderDto?> GetReminderAsync(int relativeId,int patientId, int reminderId);
+        public Task DeleteReminder(int relativeId, int patientId, int reminderId);
 
-        //Task<ReminderDto> CreateReminderAsync(int relativeId, CreateReminderDto dto);
-
-        //Task UpdateReminderAsync(int relativeId,UpdateReminderDto dto);
-        //Task DeleteReminderAsync(int relativeId, int reminderId);
-        //Task<PatientLocationDto?> GetPatientLocationAsync(int relativeId,int patientId);
-        //Task<PatientReportsDto> GetPatientReportsAsync(int relativeId,int patientId);
-        //Task<PatientDetailsDto?> GetPatientDetailsAsync(int relativeId,int patientId);
     }
 }

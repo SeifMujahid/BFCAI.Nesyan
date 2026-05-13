@@ -4,6 +4,7 @@ using BFCAI.Nesyan.Application.Abstraction.Models.Assessments;
 using BFCAI.Nesyan.Application.Abstraction.Models.IoT;
 using BFCAI.Nesyan.Application.Abstraction.Models.Patients;
 using BFCAI.Nesyan.Application.Abstraction.Models.Relatives;
+using BFCAI.Nesyan.Application.Abstraction.Models.Reminders;
 using BFCAI.Nesyan.Application.Abstraction.Models.Reminders.Medications;
 using BFCAI.Nesyan.Application.Abstraction.Models.Routines;
 using BFCAI.Nesyan.Domain.Entities.Assessments;
@@ -303,6 +304,8 @@ namespace BFCAI.Nesyan.Application.Mapping
                                 .Where(m =>
                                     m.Type ==
                                     ReminderType.Routine)));
+                CreateMap<ReminderToCreateDto, Medication>();
+                CreateMap<ReminderToUpdateDto,Medication>();
         }
     }
 }

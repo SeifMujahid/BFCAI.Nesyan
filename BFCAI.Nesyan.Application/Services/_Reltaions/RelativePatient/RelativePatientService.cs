@@ -3,6 +3,7 @@ using BFCAI.Nesyan.Application.Abstraction.Models._Relations.RelativePatient;
 using BFCAI.Nesyan.Application.Abstraction.Models.Appointments;
 using BFCAI.Nesyan.Application.Abstraction.Models.Patients;
 using BFCAI.Nesyan.Application.Abstraction.Models.Relatives;
+using BFCAI.Nesyan.Application.Abstraction.Models.Reminders;
 using BFCAI.Nesyan.Application.Abstraction.Models.Reminders.Medications;
 using BFCAI.Nesyan.Application.Abstraction.Models.Routines;
 using BFCAI.Nesyan.Application.Abstraction.Services._Relations;
@@ -59,19 +60,19 @@ namespace BFCAI.Nesyan.Application.Services._Reltaions.RelativePatient
             var relativePatient = await unitOfWork.GetRepository<PatientRelative, int>().GetWithSpecAsync(specs);
             if (relativePatient is null)
                 throw new NotFoundException(nameof(relativePatient), new { rId = relativeId, pId = patientId });
-             RelativePatientRemindersDto patientsRemindesDto;
+            RelativePatientRemindersDto patientsRemindesDto;
 
             switch (reminderType)
             {
                 case 1:
-                     patientsRemindesDto = new RelativePatientRemindersDto
+                    patientsRemindesDto = new RelativePatientRemindersDto
                     {
 
                         RelativeSummary =
-                          mapper.Map<RelativeSummaryDto>(relativePatient?.Relative),
+                         mapper.Map<RelativeSummaryDto>(relativePatient?.Relative),
 
                         PatientMedications =
-                          mapper.Map<PatientMedicationsDto>(relativePatient?.Patient),
+                         mapper.Map<PatientMedicationsDto>(relativePatient?.Patient),
 
                         PatientAppointments = null,
                         PatientRoutines = null
@@ -84,16 +85,16 @@ namespace BFCAI.Nesyan.Application.Services._Reltaions.RelativePatient
 
                 case 2:
 
-                     patientsRemindesDto = new RelativePatientRemindersDto
+                    patientsRemindesDto = new RelativePatientRemindersDto
                     {
 
                         RelativeSummary =
-                          mapper.Map<RelativeSummaryDto>(relativePatient?.Relative),
+                         mapper.Map<RelativeSummaryDto>(relativePatient?.Relative),
 
                         PatientMedications = null,
 
                         PatientAppointments =
-                          mapper.Map<PatientAppointmentsDto>(relativePatient?.Patient),
+                         mapper.Map<PatientAppointmentsDto>(relativePatient?.Patient),
 
                         PatientRoutines = null
 
@@ -101,11 +102,11 @@ namespace BFCAI.Nesyan.Application.Services._Reltaions.RelativePatient
 
                     break;
                 case 3:
-                     patientsRemindesDto = new RelativePatientRemindersDto
+                    patientsRemindesDto = new RelativePatientRemindersDto
                     {
 
                         RelativeSummary =
-                          mapper.Map<RelativeSummaryDto>(relativePatient?.Relative),
+                         mapper.Map<RelativeSummaryDto>(relativePatient?.Relative),
 
                         PatientMedications = null,
 
@@ -123,6 +124,68 @@ namespace BFCAI.Nesyan.Application.Services._Reltaions.RelativePatient
             }
             return patientsRemindesDto;
         }
+        public async Task CreateReminder(int relativeId, int patientId, ReminderToCreateDto dto)
+        {
+            var spec = new RelativePatientCheckSpecifications(relativeId, patientId);
+            var relation = await unitOfWork.GetRepository<PatientRelative, int>().GetWithSpecAsync(spec);
 
+            if (relation is null)
+                throw new NotFoundException(nameof(PatientRelative), new { relativeId, patientId });
+
+            var reminder =
+                 mapper.Map<Medication>(dto);
+
+            reminder.PatientId = patientId;
+
+            await unitOfWork.GetRepository<Medication, int>().AddAsync(reminder);
+
+            await unitOfWork.CompleteAsync();
+        }
+        public async Task UpdateReminder(int relativeId,int patientId,int reminderId,ReminderToUpdateDto dto)
+        {
+            var relationSpec = new RelativePatientCheckSpecifications(relativeId,patientId);
+
+            var relation =await unitOfWork.GetRepository<PatientRelative, int>().GetWithSpecAsync(relationSpec);
+
+            if (relation is null)
+                throw new NotFoundException( nameof(PatientRelative),new{relativeId,patientId});
+
+            var reminderRepo =unitOfWork.GetRepository<Medication, int>();
+
+            var reminder =await reminderRepo.Get(reminderId);
+
+            if (reminder?.PatientId != patientId)
+                throw new NotFoundException(nameof(Medication), new { reminderId, patientId });
+
+            mapper.Map(dto, reminder);
+
+            reminderRepo.Update(reminder);
+
+            await unitOfWork.CompleteAsync();
+        }
+
+        public async Task DeleteReminder(int relativeId,int patientId,int reminderId)
+        {
+            var relationSpec =new RelativePatientCheckSpecifications(relativeId,patientId);
+
+            var relation =await unitOfWork.GetRepository<PatientRelative, int>().GetWithSpecAsync(relationSpec);
+
+            if (relation is null)
+                  throw new NotFoundException( nameof(PatientRelative),new { relativeId, patientId });
+
+            var reminderRepo = unitOfWork.GetRepository<Medication, int>();
+
+            var reminder =await reminderRepo.Get(reminderId);
+
+            if (reminder?.PatientId != patientId)
+                throw new NotFoundException(nameof(Medication), new { reminderId, patientId });
+
+
+            reminderRepo.Delete(reminder);
+
+            await unitOfWork.CompleteAsync();
+        }
     }
+
 }
+

@@ -1,4 +1,5 @@
 ﻿using BFCAI.Nesyan.Application.Abstraction.Models._Relations.RelativePatient;
+using BFCAI.Nesyan.Application.Abstraction.Models.Reminders;
 using BFCAI.Nesyan.Application.Abstraction.Services;
 using BFCAI.Nesyan.Application.Abstraction.Services._Relations;
 using BFCAI.Nesyan.Controllers.Controllers.Base;
@@ -47,6 +48,27 @@ namespace BFCAI.Nesyan.Controllers.Controllers._Relations.RelativePatientControl
                 await serviceManager.RelativePatientService.GetPatientReminders(relativeId,patientId,reminderType);
 
             return Ok(result);
+        }
+        [Microsoft.AspNetCore.Mvc.HttpPost("{relativeId}/patients/{patientId}/reminders")]
+        public async Task<IActionResult> CreateReminder(int relativeId,int patientId,[FromBody]ReminderToCreateDto dto)
+        {
+            await serviceManager.RelativePatientService.CreateReminder(relativeId,patientId,dto);
+
+            return Ok();
+        }
+        [Microsoft.AspNetCore.Mvc.HttpPut("{relativeId}/patients/{patientId}/reminders/{reminderId}")]
+        public async Task<IActionResult>UpdateReminder(int relativeId,int patientId,int reminderId,[FromBody] ReminderToUpdateDto dto)
+        {
+            await serviceManager.RelativePatientService.UpdateReminder(relativeId,patientId,reminderId,dto);
+
+            return NoContent();
+        }
+        [Microsoft.AspNetCore.Mvc.HttpDelete("{relativeId}/patients/{patientId}/reminders/{reminderId}")]
+        public async Task<IActionResult>DeleteReminder(int relativeId,int patientId,int reminderId)
+        {
+            await serviceManager.RelativePatientService.DeleteReminder(relativeId,patientId,reminderId);
+
+            return NoContent();
         }
     }
 }
