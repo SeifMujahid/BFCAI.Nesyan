@@ -1,8 +1,12 @@
 using AutoMapper;
 using BFCAI.Nesyan.Application.Abstraction.Models.Caregivers;
+using BFCAI.Nesyan.Application.Abstraction.Models.Patients;
 using BFCAI.Nesyan.Application.Abstraction.Services.Caregivers;
+using BFCAI.Nesyan.Application.Common.Exceptions;
 using BFCAI.Nesyan.Domain.Contracts;
 using BFCAI.Nesyan.Domain.Entities.Primary.Caregivers;
+using BFCAI.Nesyan.Domain.Entities.Primary.Patients;
+using BFCAI.Nesyan.Domain.Specifications.Caregivers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,21 +16,112 @@ namespace BFCAI.Nesyan.Application.Services.Caregivers
 {
     public class CaregiverService(IUnitOfWork UnitOfWork, IMapper Mapper) : ICaregiverService
     {
-        public async Task<IEnumerable<CaregiverToReturnDto>> GetCaregiversAsync()
+        public async Task<IEnumerable<CaregiverSummaryDto>> GetCaregiversAsync()
         {
-            var repo = UnitOfWork.GetRepository<Caregiver, int>();
-            var caregivers = await repo.GetAllAsync();
-            return Mapper.Map<IEnumerable<CaregiverToReturnDto>>(caregivers);
+            var caregivers = await UnitOfWork.GetRepository<Caregiver, int>().GetAllAsync();
+            return Mapper.Map<IEnumerable<CaregiverSummaryDto>>(caregivers);
         }
 
-        public async Task<CaregiverToReturnDto> GetCaregiverAsync(int id)
+        public async Task<CaregiverPatientsDto> GetCaregiverAsync(int id)
         {
-            var repo = UnitOfWork.GetRepository<Caregiver, int>();
-            var caregiver = await repo.Get(id);
-            if (caregiver is null) throw new Exception("Caregiver not found");
-            return Mapper.Map<CaregiverToReturnDto>(caregiver);
-        }
+            var specs = new CaregiverGetPatientsSpecifications(id);
+            var caregiver = await UnitOfWork.GetRepository<Caregiver, int>().GetWithSpecAsync(specs);
 
+            if (caregiver is null) 
+                throw new NotFoundException(nameof(caregiver),id);
+            var caregivePatients = new CaregiverPatientsDto
+            {
+                CaregiverSummary = Mapper.Map<CaregiverSummaryDto>(caregiver),
+                Patients = Mapper.Map<IEnumerable<PatientSummaryDto>>(caregiver.Patients)
+            };
+            return caregivePatients;
+        }
+        public async Task <CaregiverPatientHomeDto>GetPatientHome(int caregiverId,int patientId)
+        {
+            var specs =new CaregiverMainSpecs( caregiverId,  patientId);
+            var caregiverpatient=await UnitOfWork.GetRepository<Patient,int>().GetWithSpecAsync(specs);
+            if (caregiverpatient is null)
+                throw new NotFoundException(nameof(caregiverpatient), new{ caregiverId, patientId });
+            var caregiverPatientHome = new CaregiverPatientHomeDto
+            {
+                CaregiverSummary = Mapper.Map<CaregiverSummaryDto>(caregiverpatient.Caregiver),
+                Patient = Mapper.Map<PatientHomeDto>(caregiverpatient)
+            };
+            return caregiverPatientHome;
+
+        }
+        public async Task<CaregiverPatientRemindersDto>GetPatientReminders(int caregiverId, int patientId,int reminderType)
+        {
+            var specs =new CaregiverMainSpecs(caregiverId,patientId, reminderType);
+
+            var patient =await UnitOfWork.GetRepository<Patient, int>().GetWithSpecAsync(specs);
+
+            if (patient is null)
+                throw new NotFoundException(nameof(Patient),new{caregiverId,patientId});
+
+
+            CaregiverPatientRemindersDto caregiverPatientReminders;
+
+            switch (reminderType)
+            {
+
+                case 1:
+                    caregiverPatientReminders =new CaregiverPatientRemindersDto
+                        {
+                            PatientMedications =
+                                Mapper.Map<PatientMedicationsDto>(patient),
+
+                            PatientAppointments =null,
+
+                            PatientRoutines =null
+                        };
+
+                    break;
+
+
+                // =========================
+                // Appointments
+                // =========================
+
+                case 2:
+
+                    caregiverPatientReminders =new CaregiverPatientRemindersDto
+                        {
+                            PatientMedications =null,
+
+                            PatientAppointments =
+                                Mapper.Map<PatientAppointmentsDto>(patient),
+
+                            PatientRoutines =null
+                        };
+
+                    break;
+
+
+                // =========================
+                // Routines
+                // =========================
+
+                case 3:
+
+                    caregiverPatientReminders =new CaregiverPatientRemindersDto
+                        {
+                            PatientMedications =null,
+
+                            PatientAppointments =null,
+
+                            PatientRoutines =
+                            Mapper.Map<PatientRoutineDto>(patient)
+                        };
+
+                    break;
+
+                default:
+                    throw new Exception("Invalid reminder type");
+            }
+
+            return caregiverPatientReminders;
+        }
         public async Task<CaregiverToReturnDto> CreateCaregiverAsync(CaregiverToCreateDto caregiverToCreate)
         {
             var repo = UnitOfWork.GetRepository<Caregiver, int>();
@@ -75,5 +170,6 @@ namespace BFCAI.Nesyan.Application.Services.Caregivers
             repo.Delete(caregiver);
             await UnitOfWork.CompleteAsync();
         }
+
     }
 }

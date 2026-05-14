@@ -1,5 +1,6 @@
 using BFCAI.Nesyan.Application.Abstraction.Models.Caregivers;
 using BFCAI.Nesyan.Application.Abstraction.Services;
+using BFCAI.Nesyan.Application.Abstraction.Services.Caregivers;
 using BFCAI.Nesyan.Controllers.Controllers.Base;
 using BFCAI.Nesyan.Controllers.Errors;
 using Microsoft.AspNetCore.Mvc;
@@ -21,15 +22,24 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Caregivers
         [HttpGet("{id}")]
         public async Task<ActionResult<CaregiverToReturnDto>> GetCaregiver(int id)
         {
-            try
-            {
+
                 var caregiver = await serviceManager.CaregiverService.GetCaregiverAsync(id);
                 return Ok(caregiver);
-            }
-            catch (Exception ex)
-            {
-                return NotFound(new ApiResponse(404));
-            }
+           
+        }
+        [HttpGet("{caregiverId}/patients/{patientId}/home")]
+        public async Task<IActionResult> GetPatientHome(int caregiverId,int patientId)
+        {
+            var result =await serviceManager.CaregiverService.GetPatientHome(caregiverId,patientId);
+
+            return Ok(result);
+        }
+        [HttpGet("{caregiverId}/patients/{patientId}/reminders")]
+        public async Task<IActionResult>GetPatientReminders(int caregiverId,int patientId,[FromQuery]int reminderType)
+        {
+            var result = await serviceManager.CaregiverService.GetPatientReminders(caregiverId,patientId,reminderType);
+
+            return Ok(result);
         }
 
         [HttpPost]

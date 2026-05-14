@@ -79,6 +79,11 @@ namespace BFCAI.Nesyan.Application.Mapping
                     .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => Enum.Parse<Gender>(src.Gender, true)));
             CreateMap<Caregiver, CaregiverToReturnDto>()
                     .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender.ToString()));
+
+            CreateMap<Caregiver, CaregiverSummaryDto>()
+                    .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender.ToString()))
+                    .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FName + " " + src.LName));
+
             CreateMap<CaregiverToReturnDto, Caregiver>()
                     .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => Enum.Parse<Gender>(src.Gender, true)));
 
