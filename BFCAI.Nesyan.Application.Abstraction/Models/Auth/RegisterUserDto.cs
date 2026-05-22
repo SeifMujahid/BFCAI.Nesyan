@@ -23,6 +23,11 @@ namespace BFCAI.Nesyan.Application.Abstraction.Models.Auth
         [Required]
         public Gender Gender { get; set; }
         [Required]
+        [RegularExpression(@"^(010|011|012|015)[0-9]{8}$", ErrorMessage = "Phone number must be a valid Egyptian mobile number (11 digits starting with 010, 011, 012, or 015).")]
+        public string Phone { get; set; } = null!;
+        [Required]
+        public MaritalStatus MaritalStatus { get; set; }
+        [Required]
         public string Country { get; set; } = null!;
         [Required]
         public string City { get; set; } = null!;

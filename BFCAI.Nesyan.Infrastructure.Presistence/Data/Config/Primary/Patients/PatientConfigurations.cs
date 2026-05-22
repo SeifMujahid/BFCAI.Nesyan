@@ -14,9 +14,6 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Config.Primary.Patients
                    .HasForeignKey(p => p.DoctorId)
                    .OnDelete(DeleteBehavior.SetNull);
 
-            builder.Property(p => p.BloodType)
-                .IsRequired()
-                .HasMaxLength(10);
             builder.Property(p => p.CurrentStage)
                .IsRequired()
                .HasConversion<string>();
@@ -33,8 +30,9 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Config.Primary.Patients
 
             // BloodType
             builder.Property(p => p.BloodType)
-                         .HasConversion<string>()
-                         .IsRequired();
+                          .HasConversion<string>()
+                          .HasMaxLength(15)
+                          .IsRequired();
 
             // ChronicDisease
             builder.Property(p => p.ChronicDisease)

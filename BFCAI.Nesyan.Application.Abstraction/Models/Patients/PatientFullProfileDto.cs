@@ -25,7 +25,7 @@ namespace BFCAI.Nesyan.Application.Abstraction.Models.Patients
         public double Height { get; set; }
         public double Weight { get; set; }
         public string BloodType { get; set; } = null!;
-        public string ChronicDisease { get; set; } = null!;
+        public List<string> Diseases { get; set; } = new List<string>();
 
         public IEnumerable<TelemetryRequestDto> Telemetries { get; set; } = new List<TelemetryRequestDto>();
         public IEnumerable<AssessmentsToReturnDto> Assessments { get; set; } = new List<AssessmentsToReturnDto>();

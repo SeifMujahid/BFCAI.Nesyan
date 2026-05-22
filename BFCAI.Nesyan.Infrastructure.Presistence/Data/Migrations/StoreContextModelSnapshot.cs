@@ -327,6 +327,9 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Migrations
                     b.Property<int>("Gender")
                         .HasColumnType("int");
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsVerified")
                         .HasColumnType("bit");
 
@@ -339,6 +342,9 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Migrations
 
                     b.Property<DateTime>("LastModifiedOn")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("MaritalStatus")
+                        .HasColumnType("int");
 
                     b.Property<string>("NationalId")
                         .IsRequired()
@@ -353,6 +359,10 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Migrations
 
                     b.Property<DateTime?>("PasswordResetCodeExpires")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -417,6 +427,10 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<string>("ImageUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<bool>("IsVerified")
                         .HasColumnType("bit");
 
@@ -431,6 +445,11 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Migrations
 
                     b.Property<DateTime>("LastModifiedOn")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("MaritalStatus")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<string>("MedicalAssociationCard")
                         .IsRequired()
@@ -452,6 +471,11 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Migrations
 
                     b.Property<DateTime?>("PasswordResetCodeExpires")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -491,8 +515,8 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Migrations
 
                     b.Property<string>("BloodType")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<int?>("CaregiverId")
                         .HasColumnType("int");
@@ -544,6 +568,10 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Migrations
                     b.Property<decimal>("Height")
                         .HasColumnType("decimal(5,2)");
 
+                    b.Property<string>("ImageUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<bool>("IsVerified")
                         .HasColumnType("bit");
 
@@ -558,6 +586,11 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Migrations
 
                     b.Property<DateTime>("LastModifiedOn")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("MaritalStatus")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<string>("NationalId")
                         .IsRequired()
@@ -574,6 +607,11 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Migrations
 
                     b.Property<DateTime?>("PasswordResetCodeExpires")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -650,6 +688,10 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Migrations
                         .HasMaxLength(6)
                         .HasColumnType("nvarchar(6)");
 
+                    b.Property<string>("ImageUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<bool>("IsVerified")
                         .HasColumnType("bit");
 
@@ -664,6 +706,11 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Migrations
 
                     b.Property<DateTime>("LastModifiedOn")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("MaritalStatus")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<string>("NationalId")
                         .IsRequired()
@@ -680,6 +727,11 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Migrations
 
                     b.Property<DateTime?>("PasswordResetCodeExpires")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)");
 
                     b.Property<string>("UserName")
                         .IsRequired()

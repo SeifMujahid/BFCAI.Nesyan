@@ -13,6 +13,14 @@ namespace BFCAI.Nesyan.Domain.Entities.Primary
         Male = 0,
         Female = 1
     }
+    public enum MaritalStatus
+    {
+        Single = 0,
+        Married = 1,
+        Divorced = 2,
+        Widowed = 3,
+        Separated = 4
+    }
     public class User : BaseAuditableEntity<int>
     {
         public string NationalId { get; set; } = null!;
@@ -21,7 +29,10 @@ namespace BFCAI.Nesyan.Domain.Entities.Primary
         public string UserName { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string Password { get; set; } = null!;
+        public string Phone { get; set; } = null!;
         public Gender Gender { get; set; }
+        public MaritalStatus MaritalStatus { get; set; }
+        public string? ImageUrl { get; set; }
         public string Country { get; set; } = null!;
         public string City { get; set; } = null!;
         public int Age { get; set; }

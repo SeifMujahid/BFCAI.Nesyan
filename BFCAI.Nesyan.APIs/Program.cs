@@ -1,4 +1,4 @@
-﻿using BFCAI.Nesyan;
+using BFCAI.Nesyan;
 using BFCAI.Nesyan.APIs.Extensions;
 using BFCAI.Nesyan.Application;
 using BFCAI.Nesyan.Infrastructure.Presistence;

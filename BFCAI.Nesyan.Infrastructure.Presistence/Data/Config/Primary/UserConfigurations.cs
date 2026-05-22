@@ -1,4 +1,4 @@
-﻿using BFCAI.Nesyan.Domain.Entities.Primary;
+using BFCAI.Nesyan.Domain.Entities.Primary;
 using BFCAI.Nesyan.Infrastructure.Presistence.Data.Config.Base;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -55,6 +55,19 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Config.Primary
                 .HasConversion<string>()
                 .HasMaxLength(6)
                 .IsRequired();
+
+            builder.Property(u => u.Phone)
+                .IsRequired()
+                .HasMaxLength(11);
+
+            builder.Property(u => u.MaritalStatus)
+                .HasConversion<string>()
+                .HasMaxLength(15)
+                .IsRequired();
+
+            builder.Property(u => u.ImageUrl)
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             // Indexes (VERY IMPORTANT)
             builder.HasIndex(u => u.Email)

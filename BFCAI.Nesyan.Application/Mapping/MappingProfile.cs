@@ -41,23 +41,31 @@ namespace BFCAI.Nesyan.Application.Mapping
             CreateMap<Patient, PatientToReturnDto>()
                 .ForMember(d => d.Gender, o => o.MapFrom(s => s.Gender.ToString()))
                 .ForMember(d => d.BloodType, o => o.MapFrom(s => s.BloodType.ToString()))
-                .ForMember(d => d.CurrentStageName, o => o.MapFrom(s => s.CurrentStage.ToString()));
+                .ForMember(d => d.CurrentStageName, o => o.MapFrom(s => s.CurrentStage.ToString()))
+                .ForMember(d => d.Diseases, o => o.MapFrom(s => !string.IsNullOrEmpty(s.ChronicDisease)
+                    ? s.ChronicDisease.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(d => d.Trim()).ToList()
+                    : new List<string>()));
 
             CreateMap<PatientToCreateDto, Patient>()
                 .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => Enum.Parse<Gender>(src.Gender, true)))
                 .ForMember(dest => dest.BloodType, opt => opt.MapFrom(src => Enum.Parse<BloodType>(src.BloodType, true)))
-                .ForMember(dest => dest.CurrentStage, opt => opt.MapFrom(src => (AlzheimerStage)src.CurrentStage));
+                .ForMember(dest => dest.CurrentStage, opt => opt.MapFrom(src => (AlzheimerStage)src.CurrentStage))
+                .ForMember(dest => dest.ChronicDisease, opt => opt.MapFrom(src => src.Diseases != null && src.Diseases.Count > 0 ? string.Join(",", src.Diseases) : string.Empty));
 
             CreateMap<PatientToReturnDto, Patient>()
                 .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => Enum.Parse<Gender>(src.Gender, true)))
                 .ForMember(dest => dest.BloodType, opt => opt.MapFrom(src => Enum.Parse<BloodType>(src.BloodType, true)))
-                .ForMember(dest => dest.CurrentStage, opt => opt.MapFrom(src => (AlzheimerStage)src.CurrentStage));
+                .ForMember(dest => dest.CurrentStage, opt => opt.MapFrom(src => (AlzheimerStage)src.CurrentStage))
+                .ForMember(dest => dest.ChronicDisease, opt => opt.MapFrom(src => src.Diseases != null && src.Diseases.Count > 0 ? string.Join(",", src.Diseases) : string.Empty));
 
             CreateMap<Patient, PatientFullProfileDto>()
                 .ForMember(d => d.CurrentStage, o => o.MapFrom(s => (int)s.CurrentStage))
                 .ForMember(d => d.BloodType, o => o.MapFrom(s => s.BloodType.ToString()))
                 .ForMember(d => d.CurrentStageName, o => o.MapFrom(s => s.CurrentStage.ToString()))
-                .ForMember(d => d.Gender, o => o.MapFrom(s => s.Gender.ToString()));
+                .ForMember(d => d.Gender, o => o.MapFrom(s => s.Gender.ToString()))
+                .ForMember(d => d.Diseases, o => o.MapFrom(s => !string.IsNullOrEmpty(s.ChronicDisease)
+                    ? s.ChronicDisease.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(d => d.Trim()).ToList()
+                    : new List<string>()));
 
 
 

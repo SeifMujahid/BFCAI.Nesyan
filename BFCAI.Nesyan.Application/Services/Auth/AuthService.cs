@@ -99,7 +99,10 @@ namespace BFCAI.Nesyan.Application.Services.Auth
                 Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                 FName = dto.FName,
                 LName = dto.LName,
+                Phone = dto.Phone,
                 Gender = dto.Gender,
+                MaritalStatus = dto.MaritalStatus,
+                ImageUrl = dto.Image != null ? SaveFile(dto.Image, "patients/avatars") : null,
                 Country = dto.Country,
                 City = dto.City,
                 Age = dto.Age,
@@ -107,7 +110,9 @@ namespace BFCAI.Nesyan.Application.Services.Auth
                 Height = dto.Height,
                 Weight = dto.Weight,
                 BloodType = dto.BloodType,
-                ChronicDisease = dto.ChronicDisease,
+                ChronicDisease = dto.Diseases != null && dto.Diseases.Count > 0 
+                    ? string.Join(",", dto.Diseases) 
+                    : string.Empty,
                 CreatedBy = "System", // Default audit property
                 CreatedOn = DateTime.UtcNow,
                 LastModifiedBy = "System",
@@ -147,7 +152,9 @@ namespace BFCAI.Nesyan.Application.Services.Auth
                 Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                 FName = dto.FName,
                 LName = dto.LName,
+                Phone = dto.Phone,
                 Gender = dto.Gender,
+                MaritalStatus = dto.MaritalStatus,
                 Country = dto.Country,
                 City = dto.City,
                 Age = dto.Age,
@@ -192,7 +199,9 @@ namespace BFCAI.Nesyan.Application.Services.Auth
                 Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                 FName = dto.FName,
                 LName = dto.LName,
+                Phone = dto.Phone,
                 Gender = dto.Gender,
+                MaritalStatus = dto.MaritalStatus,
                 Country = dto.Country,
                 City = dto.City,
                 Age = dto.Age,
@@ -235,7 +244,9 @@ namespace BFCAI.Nesyan.Application.Services.Auth
                 Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                 FName = dto.FName,
                 LName = dto.LName,
+                Phone = dto.Phone,
                 Gender = dto.Gender,
+                MaritalStatus = dto.MaritalStatus,
                 Country = dto.Country,
                 City = dto.City,
                 Age = dto.Age,
@@ -308,6 +319,28 @@ namespace BFCAI.Nesyan.Application.Services.Auth
             await _unitOfWork.CompleteAsync();
 
             return new AuthResponseDto { IsSuccess = true, Message = "Account verified successfully." };
+        }
+
+        public async Task<AuthResponseDto> ResendVerificationCodeAsync(ResendVerificationCodeDto dto)
+        {
+            var (user, role) = await GetUserByEmailAsync(dto.Email);
+
+            if (user == null)
+                return new AuthResponseDto { IsSuccess = false, Message = "User not found." };
+
+            if (user.IsVerified)
+                return new AuthResponseDto { IsSuccess = false, Message = "Account is already verified." };
+
+            var code = GenerateVerificationCode();
+            user.VerificationCode = code;
+            user.VerificationCodeExpires = DateTime.UtcNow.AddHours(24);
+
+            UpdateUser(user, role);
+            await _unitOfWork.CompleteAsync();
+
+            await _emailService.SendEmailAsync(user.Email, "Verify Your Account", $"Your verification code is: {code}");
+
+            return new AuthResponseDto { IsSuccess = true, Message = "A new verification code has been sent to your email." };
         }
 
         public async Task<AuthResponseDto> ForgotPasswordAsync(ForgotPasswordDto dto)

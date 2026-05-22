@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace BFCAI.Nesyan.Application.Abstraction.Models.Patients
 {
     public class PatientToCreateDto
@@ -17,7 +19,7 @@ namespace BFCAI.Nesyan.Application.Abstraction.Models.Patients
         public double Height { get; set; }
         public double Weight { get; set; }
         public string BloodType { get; set; } = null!;
-        public string ChronicDisease { get; set; } = null!;
+        public List<string> Diseases { get; set; } = new List<string>();
         public int? DoctorId { get; set; }
     }
 }

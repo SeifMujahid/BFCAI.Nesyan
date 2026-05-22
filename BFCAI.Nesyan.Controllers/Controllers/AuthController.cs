@@ -18,7 +18,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers
         }
 
         [HttpPost("register-patient")]
-        public async Task<IActionResult> RegisterPatient([FromBody] RegisterPatientDto dto)
+        public async Task<IActionResult> RegisterPatient([FromForm] RegisterPatientDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -89,6 +89,19 @@ namespace BFCAI.Nesyan.Controllers.Controllers
                 return BadRequest(ModelState);
 
             var result = await _authService.VerifyAccountAsync(dto);
+            if (!result.IsSuccess)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
+
+        [HttpPost("resend-verification-code")]
+        public async Task<IActionResult> ResendVerificationCode([FromBody] ResendVerificationCodeDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _authService.ResendVerificationCodeAsync(dto);
             if (!result.IsSuccess)
                 return BadRequest(result);
 

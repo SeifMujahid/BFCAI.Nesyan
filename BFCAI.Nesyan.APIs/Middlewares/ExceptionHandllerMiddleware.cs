@@ -1,4 +1,4 @@
-﻿using BFCAI.Nesyan.Application.Common.Exceptions;
+using BFCAI.Nesyan.Application.Common.Exceptions;
 using BFCAI.Nesyan.Controllers.Errors;
 using System.Net;
 
@@ -75,7 +75,7 @@ namespace BFCAI.Nesyan.APIs.Middlewares
 
                 default:
                     response = _env.IsDevelopment() ?
-                          response = new ApiExceptionResponse((int)HttpStatusCode.InternalServerError, ex.Message, ex.StackTrace!.ToString()) :
+                          response = new ApiExceptionResponse((int)HttpStatusCode.InternalServerError, ex.Message, ex.ToString()) :
                           response = new ApiExceptionResponse((int)HttpStatusCode.InternalServerError);
 
                     httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
