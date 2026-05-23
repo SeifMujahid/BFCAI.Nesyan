@@ -119,7 +119,7 @@ namespace BFCAI.Nesyan.Application.Services.Auth
                 LastModifiedOn = DateTime.UtcNow,
                 IsVerified = false,
                 VerificationCode = code,
-                VerificationCodeExpires = DateTime.UtcNow.AddHours(24)
+                VerificationCodeExpires = DateTime.UtcNow.AddMinutes(5)
             };
 
             await _unitOfWork.GetRepository<Patient, int>().AddAsync(user);
@@ -167,7 +167,7 @@ namespace BFCAI.Nesyan.Application.Services.Auth
                 LastModifiedOn = DateTime.UtcNow,
                 IsVerified = false,
                 VerificationCode = code,
-                VerificationCodeExpires = DateTime.UtcNow.AddHours(24)
+                VerificationCodeExpires = DateTime.UtcNow.AddMinutes(5)
             };
 
             await _unitOfWork.GetRepository<Doctor, int>().AddAsync(user);
@@ -213,7 +213,7 @@ namespace BFCAI.Nesyan.Application.Services.Auth
                 LastModifiedOn = DateTime.UtcNow,
                 IsVerified = false,
                 VerificationCode = code,
-                VerificationCodeExpires = DateTime.UtcNow.AddHours(24)
+                VerificationCodeExpires = DateTime.UtcNow.AddMinutes(5)
             };
 
             await _unitOfWork.GetRepository<Relative, int>().AddAsync(user);
@@ -259,7 +259,7 @@ namespace BFCAI.Nesyan.Application.Services.Auth
                 LastModifiedOn = DateTime.UtcNow,
                 IsVerified = false,
                 VerificationCode = code,
-                VerificationCodeExpires = DateTime.UtcNow.AddHours(24)
+                VerificationCodeExpires = DateTime.UtcNow.AddMinutes(5)
             };
 
             await _unitOfWork.GetRepository<Caregiver, int>().AddAsync(user);
@@ -336,7 +336,7 @@ namespace BFCAI.Nesyan.Application.Services.Auth
 
             var code = GenerateVerificationCode();
             user.VerificationCode = code;
-            user.VerificationCodeExpires = DateTime.UtcNow.AddHours(24);
+            user.VerificationCodeExpires = DateTime.UtcNow.AddMinutes(5);
 
             UpdateUser(user, role);
             await _unitOfWork.CompleteAsync();
@@ -355,7 +355,7 @@ namespace BFCAI.Nesyan.Application.Services.Auth
 
             var code = GenerateVerificationCode();
             user.PasswordResetCode = code;
-            user.PasswordResetCodeExpires = DateTime.UtcNow.AddHours(1);
+            user.PasswordResetCodeExpires = DateTime.UtcNow.AddMinutes(5);
 
             UpdateUser(user, role);
             await _unitOfWork.CompleteAsync();
