@@ -16,5 +16,6 @@ namespace BFCAI.Nesyan.Application.Abstraction.Services.MindGames
         Task RemoveGameFromPatientAsync(int patientId, int gameId);
         Task<PatternGameRecordDto> SubmitPatternGameResultAsync(int patientId, PatternGameRecordToCreateDto dto);
         Task<IEnumerable<PatternGameRecordDto>> GetPatientPatternGameHistoryAsync(int patientId);
+        Task<CognitiveReportDto> GetCognitiveReportAsync(int patientId);
     }
 }

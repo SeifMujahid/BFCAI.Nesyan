@@ -151,5 +151,19 @@ namespace BFCAI.Nesyan.Controllers.Controllers.MindGames
                 return NotFound(new { Message = ex.Message });
             }
         }
+
+        [HttpGet("patient/{patientId}/report")]
+        public async Task<ActionResult<CognitiveReportDto>> GetCognitiveReport(int patientId)
+        {
+            try
+            {
+                var report = await MindGamesService.GetCognitiveReportAsync(patientId);
+                return Ok(report);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
     }
 }

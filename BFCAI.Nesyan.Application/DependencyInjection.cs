@@ -27,6 +27,7 @@ namespace BFCAI.Nesyan.Application
     {
         public static IServiceCollection AddApplicationService(this IServiceCollection services)
         {
+            services.AddHttpClient();
             services.AddAutoMapper(O =>
             {
                 O.AddProfile<MappingProfile>();
