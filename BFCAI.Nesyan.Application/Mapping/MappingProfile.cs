@@ -75,9 +75,27 @@ namespace BFCAI.Nesyan.Application.Mapping
                 .ForMember(d => d.BloodType, o => o.MapFrom(s => s.BloodType.ToString()))
                 .ForMember(d => d.CurrentStageName, o => o.MapFrom(s => s.CurrentStage.ToString()))
                 .ForMember(d => d.Gender, o => o.MapFrom(s => s.Gender.ToString()))
+                .ForMember(d => d.Phone, o => o.MapFrom(s => s.Phone))
+                .ForMember(d => d.ImageUrl, o => o.MapFrom(s => s.ImageUrl))
+                .ForMember(d => d.Doctor, o => o.MapFrom(s => s.Doctor))
+                .ForMember(d => d.Caregiver, o => o.MapFrom(s => s.Caregiver))
+                .ForMember(d => d.Relatives, o => o.MapFrom(s => s.PatientRelatives.Select(pr => pr.Relative)))
+                .ForMember(d => d.Telemetries, o => o.MapFrom(s => s.PatientTelemetries))
+                .ForMember(d => d.Medications, o => o.MapFrom(s => s.Reminders.Where(r => r.Type == ReminderType.Medication)))
+                .ForMember(d => d.Appointments, o => o.MapFrom(s => s.Reminders.Where(r => r.Type == ReminderType.Appointment)))
+                .ForMember(d => d.Routines, o => o.MapFrom(s => s.Reminders.Where(r => r.Type == ReminderType.Routine)))
                 .ForMember(d => d.Diseases, o => o.MapFrom(s => !string.IsNullOrEmpty(s.ChronicDisease)
                     ? s.ChronicDisease.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(d => d.Trim()).ToList()
                     : new List<string>()));
+
+            CreateMap<Doctor, PatientDoctorDto>()
+                .ForMember(d => d.FullName, o => o.MapFrom(s => $"{s.FName} {s.LName}"));
+
+            CreateMap<Caregiver, PatientCaregiverDto>()
+                .ForMember(d => d.FullName, o => o.MapFrom(s => $"{s.FName} {s.LName}"));
+
+            CreateMap<Relative, PatientRelativeDto>()
+                .ForMember(d => d.FullName, o => o.MapFrom(s => $"{s.FName} {s.LName}"));
 
 
 

@@ -1,4 +1,4 @@
-﻿using BFCAI.Nesyan.Domain.Entities.Relations.Primary;
+using BFCAI.Nesyan.Domain.Entities.Relations.Primary;
 using BFCAI.Nesyan.Infrastructure.Presistence.Data.Config.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -21,7 +21,7 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.Data.Config.Relations.Primary
             builder.HasKey(pr => new { pr.PatientId, pr.RelativeId });
 
             builder.HasOne(pr => pr.Patient)
-                .WithMany()
+                .WithMany(p => p.PatientRelatives)
                 .HasForeignKey(pr => pr.PatientId)
                 .OnDelete(DeleteBehavior.Cascade);
 

@@ -23,12 +23,17 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Patients
         }
 
         [HttpGet("{id}/profile")]
-        public async Task<ActionResult<PatientFullProfileDto>> GetPatientHome(int id)
+        public async Task<ActionResult<PatientFullProfileDto>> GetPatientProfile(int id)
         {
-
-                var profile = await serviceManager.PatientService.GetPatientHome(id);
+            try
+            {
+                var profile = await serviceManager.PatientService.GetPatientProfileAsync(id);
                 return Ok(profile);
-
+            }
+            catch (System.Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpGet]

@@ -45,6 +45,38 @@ namespace BFCAI.Nesyan.Application.Services.Patients
             return patientHomeDto;
         }
 
+        public async Task<PatientFullProfileDto> GetPatientProfileAsync(int patientId)
+        {
+            var specs = new PatientFullProfileSpecifications(patientId);
+            var patient = await UnitOfWork.GetRepository<Patient, int>().GetWithSpecAsync(specs);
+            if (patient is null)
+                throw new NotFoundException(nameof(patient), patientId);
+
+            var profileDto = Mapper.Map<PatientFullProfileDto>(patient);
+
+            // Fetch and map assigned games manually
+            var sessionRepo = UnitOfWork.GetRepository<MindGameSession, int>();
+            var gameRepo = UnitOfWork.GetRepository<MindGame, int>();
+
+            var allSessions = await sessionRepo.GetAllAsync(false);
+            var patientSessions = allSessions.Where(s => s.PatientId == patientId).ToList();
+
+            var assignedGames = Mapper.Map<List<PatientMindGameDto>>(patientSessions);
+            var allGames = await gameRepo.GetAllAsync(false);
+
+            foreach (var dto in assignedGames)
+            {
+                var game = allGames.FirstOrDefault(g => g.Id == dto.MindGameId);
+                if (game != null)
+                {
+                    dto.MindGame = Mapper.Map<MindGameDto>(game);
+                }
+            }
+
+            profileDto.AssignedGames = assignedGames;
+            return profileDto;
+        }
+
         public async Task<IEnumerable<PatientSummaryDto>> GetPatientsAsync()
         {
             var repo = UnitOfWork.GetRepository<Patient, int>();

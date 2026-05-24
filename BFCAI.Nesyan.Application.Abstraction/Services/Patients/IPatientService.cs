@@ -12,6 +12,7 @@ namespace BFCAI.Nesyan.Application.Abstraction.Services.Patients
     {
         Task UpdatePatientStageAsync(int patientId, int newStage);
         Task<PatientHomeDto> GetPatientHome(int patientId);
+        Task<PatientFullProfileDto> GetPatientProfileAsync(int patientId);
         Task<PatientRemindersDto> GetPatientReminder(int id, int reminderType);
         Task<IEnumerable<PatientSummaryDto>> GetPatientsAsync();
         Task<PatientToReturnDto> CreatePatientAsync(PatientToCreateDto patientToCreate);
