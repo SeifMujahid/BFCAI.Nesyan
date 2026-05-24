@@ -24,6 +24,12 @@ namespace BFCAI.Nesyan.Application.Services._Reltaions.RelativePatient
 {
     public class RelativePatientService(IUnitOfWork unitOfWork, IMapper mapper) : IRelativePatientService
     {
+        public async Task CreateRelativePatientRelation(int relativeId,int patientId)
+        {
+            var repo =unitOfWork.GetRepository<PatientRelative,int>();
+            await repo.AddAsync(new PatientRelative { RelativeId = relativeId, PatientId = patientId });
+            await unitOfWork.CompleteAsync();
+        }
         public async Task<RelativePatientsDto> GetRelativePatients(int relativeId)
         {
             var spec = new GetRelativePatientsSpecification(relativeId);

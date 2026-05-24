@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BFCAI.Nesyan.Application.Abstraction.Models._Relations.RelativePatient;
 using BFCAI.Nesyan.Application.Abstraction.Models.Appointments;
 using BFCAI.Nesyan.Application.Abstraction.Models.Assessments;
 using BFCAI.Nesyan.Application.Abstraction.Models.IoT;
@@ -25,7 +26,7 @@ namespace BFCAI.Nesyan.Application.Mapping
     {
         public PatientRelativeMappingProfile()
         {
-
+            CreateMap<PatientRelative, RelativePatientToCreateDto>();
             CreateMap<PatientTelemetry,
                 TelemetryRequestDto>();
 

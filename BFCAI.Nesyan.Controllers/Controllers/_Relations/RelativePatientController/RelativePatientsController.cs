@@ -16,6 +16,12 @@ namespace BFCAI.Nesyan.Controllers.Controllers._Relations.RelativePatientControl
     [Microsoft.AspNetCore.Components.Route("api/relative")]
     public class RelativePatientsController(IServiceManager serviceManager):BaseApiController
     {
+        [Microsoft.AspNetCore.Mvc.HttpPost("create-relation")]
+        public async Task<IActionResult> CreateRelativePatientRelation(int relativeId,int patientId)
+        {
+            await serviceManager.RelativePatientService.CreateRelativePatientRelation( relativeId,patientId);
+            return Ok("Relative patient relation created successfully");
+        }
         [Microsoft.AspNetCore.Mvc.HttpGet("{relativeId}/patients")]
         public async Task<ActionResult<RelativePatientsDto>> GetRelativePatients(int relativeId)
         {
