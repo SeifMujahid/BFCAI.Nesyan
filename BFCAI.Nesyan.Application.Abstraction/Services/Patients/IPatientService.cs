@@ -17,7 +17,7 @@ namespace BFCAI.Nesyan.Application.Abstraction.Services.Patients
         Task<PatientRemindersDto> GetPatientReminder(int id, int reminderType);
         Task<IEnumerable<PatientSummaryDto>> GetPatientsAsync();
         Task<PatientToReturnDto> CreatePatientAsync(PatientToCreateDto patientToCreate);
-        Task UpdatePatientAsync(PatientToReturnDto patientToUpdate);
+        Task UpdatePatientAsync(PatientToUpdateDto patientToUpdate);
         Task DeletePatientAsync(int id);
         Task CreateReminderAsync(int patientId, ReminderToCreateDto dto);
         Task UpdateReminderAsync(int patientId, int reminderId, ReminderToUpdateDto dto);

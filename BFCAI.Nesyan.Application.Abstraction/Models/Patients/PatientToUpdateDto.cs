@@ -1,9 +1,9 @@
-using System;
+using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 
 namespace BFCAI.Nesyan.Application.Abstraction.Models.Patients
 {
-    public class PatientToReturnDto
+    public class PatientToUpdateDto
     {
         public int Id { get; set; }
         public string FName { get; set; } = null!;
@@ -20,5 +20,6 @@ namespace BFCAI.Nesyan.Application.Abstraction.Models.Patients
         public int? DoctorId { get; set; }
         public int? CaregiverId { get; set; }
         public List<string> Diseases { get; set; } = new List<string>();
+        public IFormFile? Image { get; set; }
     }
 }

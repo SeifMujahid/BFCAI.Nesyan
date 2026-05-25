@@ -16,7 +16,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace BFCAI.Nesyan.Application.Services.Patients
 {
@@ -171,13 +172,33 @@ namespace BFCAI.Nesyan.Application.Services.Patients
             return Mapper.Map<PatientToReturnDto>(patient);
         }
 
-        public async Task UpdatePatientAsync(PatientToReturnDto patientToUpdate)
+        private string SaveFile(IFormFile file, string folderName)
+        {
+            if (file == null || file.Length == 0) return string.Empty;
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", folderName);
+            if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
+            var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                file.CopyTo(fileStream);
+            }
+            return $"/uploads/{folderName}/{uniqueFileName}";
+        }
+
+        public async Task UpdatePatientAsync(PatientToUpdateDto patientToUpdate)
         {
             var repo = UnitOfWork.GetRepository<Patient, int>();
             var patient = await repo.Get(patientToUpdate.Id);
             if (patient is null) throw new Exception("Patient not found");
 
             Mapper.Map(patientToUpdate, patient);
+
+            if (patientToUpdate.Image != null)
+            {
+                patient.ImageUrl = SaveFile(patientToUpdate.Image, "patients/avatars");
+            }
+
             patient.LastModifiedOn = DateTime.UtcNow;
             patient.LastModifiedBy = patient.UserName ?? "System";
 

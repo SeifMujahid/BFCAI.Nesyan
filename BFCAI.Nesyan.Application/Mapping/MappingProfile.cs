@@ -70,6 +70,13 @@ namespace BFCAI.Nesyan.Application.Mapping
                 .ForMember(dest => dest.CurrentStage, opt => opt.MapFrom(src => (AlzheimerStage)src.CurrentStage))
                 .ForMember(dest => dest.ChronicDisease, opt => opt.MapFrom(src => src.Diseases != null && src.Diseases.Count > 0 ? string.Join(",", src.Diseases) : string.Empty));
 
+            CreateMap<PatientToUpdateDto, Patient>()
+                .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => Enum.Parse<Gender>(src.Gender, true)))
+                .ForMember(dest => dest.BloodType, opt => opt.MapFrom(src => Enum.Parse<BloodType>(src.BloodType, true)))
+                .ForMember(dest => dest.CurrentStage, opt => opt.MapFrom(src => (AlzheimerStage)src.CurrentStage))
+                .ForMember(dest => dest.ChronicDisease, opt => opt.MapFrom(src => src.Diseases != null && src.Diseases.Count > 0 ? string.Join(",", src.Diseases) : string.Empty))
+                .ForMember(dest => dest.ImageUrl, opt => opt.Ignore()); // Done manually via SaveFile
+
             CreateMap<Patient, PatientFullProfileDto>()
                 .ForMember(d => d.CurrentStage, o => o.MapFrom(s => (int)s.CurrentStage))
                 .ForMember(d => d.BloodType, o => o.MapFrom(s => s.BloodType.ToString()))

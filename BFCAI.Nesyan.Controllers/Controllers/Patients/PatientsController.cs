@@ -109,7 +109,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Patients
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdatePatient(PatientToReturnDto dto)
+        public async Task<ActionResult> UpdatePatient([FromForm] PatientToUpdateDto dto)
         {
             try
             {
