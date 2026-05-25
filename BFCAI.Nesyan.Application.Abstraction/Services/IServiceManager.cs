@@ -29,5 +29,6 @@ namespace BFCAI.Nesyan.Application.Abstraction.Services
         public ITelemetryService TelemetryService { get; }
         public IRelativePatientService RelativePatientService { get; }
         public IFamilyMembersService FamilyMembersService { get; }
+        public IDoctorRemovalBackgroundService DoctorRemovalBackgroundService { get; }
     }
 }

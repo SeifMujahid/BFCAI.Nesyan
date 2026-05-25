@@ -1,9 +1,11 @@
 using AutoMapper;
 using BFCAI.Nesyan.Application.Abstraction.Models.Doctors;
 using BFCAI.Nesyan.Application.Abstraction.Models.Patients;
+using BFCAI.Nesyan.Application.Abstraction.Models.Reminders;
 using BFCAI.Nesyan.Application.Abstraction.Services.Doctors;
 using BFCAI.Nesyan.Application.Common.Exceptions;
 using BFCAI.Nesyan.Domain.Contracts;
+using BFCAI.Nesyan.Domain.Entities.Medications;
 using BFCAI.Nesyan.Domain.Entities.Primary.Doctors;
 using BFCAI.Nesyan.Domain.Entities.Primary.Patients;
 using BFCAI.Nesyan.Domain.Entities.Relations.Primary;
@@ -16,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace BFCAI.Nesyan.Application.Services.Doctors
 {
-    public class DoctorService(IUnitOfWork UnitOfWork,IMapper Mapper) : IDoctorService
+    public class DoctorService(IUnitOfWork UnitOfWork, IMapper Mapper) : IDoctorService
     {
         public async Task<IEnumerable<DoctorSummaryDto>> GetDoctorsAsync()
         {
@@ -28,7 +30,7 @@ namespace BFCAI.Nesyan.Application.Services.Doctors
         public async Task<IEnumerable<DoctorToReturnDto>> GetDoctorsWithSpecAsync()
         {
             var specs = new DoctorSpecs();
-            var doctors =await UnitOfWork.GetRepository<Doctor, int>().GetAllWithSpecAsync(specs);
+            var doctors = await UnitOfWork.GetRepository<Doctor, int>().GetAllWithSpecAsync(specs);
             var doctorsToReturn = Mapper.Map<IEnumerable<DoctorToReturnDto>>(doctors);
             return doctorsToReturn;
         }
@@ -43,11 +45,43 @@ namespace BFCAI.Nesyan.Application.Services.Doctors
         public async Task<DoctorToReturnDto> GetDoctorWithSpecAsync(int id)
         {
             var specs = new DoctorSpecs(id);
-            var doctor =await UnitOfWork.GetRepository<Doctor, int>().GetWithSpecAsync(specs);
+            var doctor = await UnitOfWork.GetRepository<Doctor, int>().GetWithSpecAsync(specs);
             if (doctor == null)
-                throw new NotFoundException(nameof(doctor),id);
+                throw new NotFoundException(nameof(doctor), id);
             var doctorToReturn = Mapper.Map<DoctorToReturnDto>(doctor);
             return doctorToReturn;
+        }
+
+        public async Task<DoctorPatientDto> GetDoctorPatientWithSpecAsync(int doctorId, int patientId)
+        {
+            var specs = new DoctorPatientSpecs(doctorId, patientId);
+            var doctorPatient = await UnitOfWork.GetRepository<Patient, int>().GetWithSpecAsync(specs);
+            if (doctorPatient == null)
+                throw new NotFoundException(nameof(doctorPatient), new { doctorId, patientId });
+            var doctorToReturn = Mapper.Map<DoctorPatientDto>(doctorPatient);
+            return doctorToReturn;
+        }
+        public async Task DoctorUpdatePatientStage(int doctorId, int patientId, int stageNumber)
+        {
+            var specs = new DoctorPatientSpecs(doctorId, patientId);
+            var repo = UnitOfWork.GetRepository<Patient, int>();
+            var doctorPatient =await repo.GetWithSpecAsync(specs);
+            if (doctorPatient == null)
+                throw new NotFoundException(nameof(doctorPatient), new { doctorId, patientId });
+            switch (stageNumber)
+            {
+                case 1:
+                    doctorPatient.CurrentStage = AlzheimerStage.Stage1_Mild;
+                    break;
+                case 2:
+                    doctorPatient.CurrentStage = AlzheimerStage.Stage2_Moderate;
+                    break;
+                case 3:
+                    doctorPatient.CurrentStage = AlzheimerStage.Stage3_Severe;
+                    break;
+            }
+            repo.Update(doctorPatient);
+            await UnitOfWork.CompleteAsync();
         }
         public async Task<DoctorToReturnDto> CreateDoctorAsync(DoctorToCreateDto doctorToCreate)
         {
@@ -150,7 +184,71 @@ namespace BFCAI.Nesyan.Application.Services.Doctors
 
             return Mapper.Map<IEnumerable<PatientToReturnDto>>(patients);
         }
+        public async Task<DoctorPatientMedicationsDto> GetPatientMedications(int doctorId, int patientId)
+        {
+            var specs = new DoctorPatientReminderSpecs(doctorId, patientId);
 
+            var doctorPatient =
+                await UnitOfWork.GetRepository<Patient, int>().GetWithSpecAsync(specs);
+
+            if (doctorPatient is null)
+                throw new NotFoundException(nameof(doctorPatient),new { doctorId, patientId });
+
+            var patientRemindersDto =
+                new DoctorPatientMedicationsDto
+                {
+                    DoctorSummary =
+                        Mapper.Map<DoctorSummaryDto>(
+                            doctorPatient.Doctor),
+
+                    PatientMedications =
+                        Mapper.Map<PatientMedicationsDto>(
+                            doctorPatient)
+                };
+
+            return patientRemindersDto;
+        }
+        public async Task CreateReminderByDoctor(int doctorId, int patientId, ReminderToCreateDto dto)
+        {
+            var specs = new DoctorPatientSpecs(doctorId, patientId);
+            var patientRepo = UnitOfWork.GetRepository<Patient, int>();
+
+            var doctorPatient = await patientRepo.GetWithSpecAsync(specs);
+
+            if (doctorPatient == null)
+                throw new NotFoundException(nameof(doctorPatient), new { doctorId, patientId });
+
+            var reminder = Mapper.Map<Medication>(dto);
+
+            reminder.PatientId = patientId;
+            reminder.CreatedBy = "Doctor";
+
+            await UnitOfWork.GetRepository<Medication, int>().AddAsync(reminder);
+
+            await UnitOfWork.CompleteAsync();
+        }
+        public async Task UpdateReminderByDoctor(int doctorId, int patientId, int reminderId, ReminderToUpdateDto dto)
+        {
+            var specs = new DoctorPatientSpecs(doctorId, patientId);
+            var patientRepo = UnitOfWork.GetRepository<Patient, int>();
+
+            var doctorPatient = await patientRepo.GetWithSpecAsync(specs);
+            if (doctorPatient == null)
+                throw new NotFoundException(nameof(doctorPatient), new { doctorId, patientId });
+
+            var reminderRepo = UnitOfWork.GetRepository<Medication, int>();
+
+            var reminder = await reminderRepo.Get(reminderId);
+
+            if (reminder?.PatientId != patientId)
+                throw new NotFoundException(nameof(Medication), new { reminderId, patientId });
+
+            Mapper.Map(dto, reminder);
+
+            reminderRepo.Update(reminder);
+
+            await UnitOfWork.CompleteAsync();
+        }
         public async Task<DoctorStatisticsDto> GetDoctorStatisticsAsync(int doctorId)
         {
             var trRepo = UnitOfWork.GetRepository<RelativeDoctorRequest, int>();

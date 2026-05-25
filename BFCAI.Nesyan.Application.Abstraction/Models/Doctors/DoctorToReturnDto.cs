@@ -20,6 +20,6 @@ namespace BFCAI.Nesyan.Application.Abstraction.Models.Doctors
         public int Age { get; set; }
         public string GraduationDegree { get; set; } = null!;
         public string MedicalAssociationCard { get; set; } = null!;
-        public ICollection<PatientToReturnDto>? Patients { get; set; }
+        public ICollection<PatientSummaryDto>? Patients { get; set; }
     }
 }

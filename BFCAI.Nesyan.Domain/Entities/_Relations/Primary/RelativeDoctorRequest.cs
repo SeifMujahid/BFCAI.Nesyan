@@ -15,7 +15,8 @@ namespace BFCAI.Nesyan.Domain.Entities.Relations.Primary
         Pending = 0,
         Accepted = 1,
         Rejected = 2,
-        Selected = 3
+        Selected = 3,
+        DoctorRemovalPending = 4
     }
     public class RelativeDoctorRequest:BaseAuditableEntity<int>
     {

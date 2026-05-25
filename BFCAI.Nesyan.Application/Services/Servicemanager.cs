@@ -45,10 +45,10 @@ namespace BFCAI.Nesyan.Application.Services
         private readonly Lazy<ITelemetryService> _telemetryService;
         private readonly Lazy<IRelativePatientService> _relativePatientService;
         private readonly Lazy<IFamilyMembersService> _familyMembersService;
+        private readonly Lazy<IDoctorRemovalBackgroundService> _doctorRemovalBackgroundService;
 
         private readonly IEmailService _emailService;
         private readonly IHttpClientFactory _httpClientFactory;
-
         public Servicemanager(
             IUnitOfWork unitOfWork, 
             IMapper mapper, 
@@ -73,6 +73,7 @@ namespace BFCAI.Nesyan.Application.Services
             _telemetryService = new Lazy<ITelemetryService>(() => new TelemetryService(telemetryStore, _unitOfWork));
             _relativePatientService = new Lazy<IRelativePatientService>(() => new RelativePatientService(_unitOfWork, _mapper));
             _familyMembersService = new Lazy<IFamilyMembersService>(() => new FamilyMembersService(_unitOfWork, _mapper));
+            _doctorRemovalBackgroundService = new Lazy<IDoctorRemovalBackgroundService>(()=>new DoctorRemovalBackgroundService(_unitOfWork));
         }
         public IDoctorService DoctorService => _doctorService.Value;
 
@@ -93,5 +94,7 @@ namespace BFCAI.Nesyan.Application.Services
         public IRelativePatientService RelativePatientService => _relativePatientService.Value;
 
         public IFamilyMembersService FamilyMembersService => _familyMembersService.Value;
+
+        public IDoctorRemovalBackgroundService DoctorRemovalBackgroundService => _doctorRemovalBackgroundService.Value;
     }
 }

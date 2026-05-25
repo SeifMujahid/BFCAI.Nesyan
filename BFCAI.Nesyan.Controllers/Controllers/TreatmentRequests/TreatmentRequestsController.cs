@@ -15,13 +15,18 @@ namespace BFCAI.Nesyan.Controllers.Controllers.TreatmentRequests
             return Ok("Request created successfuly");
         }
 
-        [HttpGet("doctor/{doctorId}/pending")]
-        public async Task<ActionResult<IEnumerable<TreatmentRequestToReturnDto>>> GetPendingRequests(int doctorId)
+        [HttpGet("doctor/{doctorId}/doctor-requests")]
+        public async Task<ActionResult<IEnumerable<TreatmentRequestToReturnDto>>> GetDoctorPendingRequests(int doctorId, [FromQuery] int orderType = 0)
         {
-            var requests = await ServiceManager.TreatmentRequestService.GetDoctorPendingRequestsAsync(doctorId);
+            var requests = await ServiceManager.TreatmentRequestService.GetDoctorPendingRequestsAsync(doctorId,orderType);
             return Ok(requests);
         }
-
+        [HttpGet("doctor/{relativeId}/relative-requests")]
+        public async Task<ActionResult<IEnumerable<TreatmentRequestToReturnDto>>> GetRelativePendingRequests(int relativeId, [FromQuery] int orderType = 0)
+        {
+            var requests = await ServiceManager.TreatmentRequestService.GetRelativePendingRequestsAsync(relativeId, orderType);
+            return Ok(requests);
+        }
         [HttpPatch("{requestId}/doctor-accept")]
         public async Task<ActionResult> DoctorAcceptRequest(int requestId, [FromQuery] int doctorId)
         {

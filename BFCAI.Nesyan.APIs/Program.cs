@@ -1,13 +1,16 @@
 using BFCAI.Nesyan;
 using BFCAI.Nesyan.APIs.Extensions;
+using BFCAI.Nesyan.APIs.HangfireExtensions;
+using BFCAI.Nesyan.APIs.Middlewares;
 using BFCAI.Nesyan.Application;
+using BFCAI.Nesyan.Application.Services.TreatmentRequests;
+using BFCAI.Nesyan.Controllers.Errors;
 using BFCAI.Nesyan.Infrastructure.Presistence;
-using Microsoft.AspNetCore.Mvc;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using BFCAI.Nesyan.Controllers.Errors;
-using BFCAI.Nesyan.APIs.Middlewares;
 
 namespace BFCAI.Nesyan.APIs
 {
@@ -44,6 +47,13 @@ namespace BFCAI.Nesyan.APIs
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddSignalR();
+            builder.Services.AddHangfire(
+                config =>config.UseSqlServerStorage(
+                builder.Configuration.GetConnectionString("DefaultConnection")
+                ));
+
+            builder.Services.AddHangfireServer();
+            
 
             builder.Services.AddScoped<
                 BFCAI.Nesyan.Application.Abstraction.Services.IoT.ITelemetryNotifier,
@@ -87,6 +97,7 @@ namespace BFCAI.Nesyan.APIs
 
             #region Database Initialization
             await app.InitializerStoreContextAsync();
+            await app.AutomaticDoctorRemoving();
             #endregion
 
             #region Configure Middlewares
@@ -102,7 +113,7 @@ namespace BFCAI.Nesyan.APIs
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseStaticFiles();
-
+            app.UseHangfireDashboard();
             app.MapControllers();
             app.MapHub<BFCAI.Nesyan.APIs.Hubs.TelemetryHub>("/telemetryHub");
 

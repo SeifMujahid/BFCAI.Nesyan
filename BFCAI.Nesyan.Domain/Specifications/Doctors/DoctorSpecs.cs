@@ -11,6 +11,7 @@ namespace BFCAI.Nesyan.Domain.Specifications.Doctors
     {
         public DoctorSpecs()
         {
+
             AddIncludes();
         }
         public DoctorSpecs(int Id):base(Id)

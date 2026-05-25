@@ -2,6 +2,7 @@
 using BFCAI.Nesyan.Application.Abstraction.Models._Relations.RelativePatient;
 using BFCAI.Nesyan.Application.Abstraction.Models.Appointments;
 using BFCAI.Nesyan.Application.Abstraction.Models.Assessments;
+using BFCAI.Nesyan.Application.Abstraction.Models.Doctors;
 using BFCAI.Nesyan.Application.Abstraction.Models.IoT;
 using BFCAI.Nesyan.Application.Abstraction.Models.Patients;
 using BFCAI.Nesyan.Application.Abstraction.Models.Relatives;
@@ -26,6 +27,14 @@ namespace BFCAI.Nesyan.Application.Mapping
     {
         public PatientRelativeMappingProfile()
         {
+            CreateMap<Patient, DoctorPatientDto>()
+               .ForMember(
+                   dest => dest.PatientSummary,
+                   opt => opt.MapFrom(src => src))
+              
+               .ForMember(
+                   dest => dest.DoctorSummary,
+                   opt => opt.MapFrom(src => src.Doctor));
             CreateMap<PatientRelative, RelativePatientToCreateDto>();
             CreateMap<PatientTelemetry,
                 TelemetryRequestDto>();
