@@ -10,9 +10,11 @@ using BFCAI.Nesyan.Application.Abstraction.Services._Relations;
 using BFCAI.Nesyan.Application.Common.Exceptions;
 using BFCAI.Nesyan.Domain.Contracts;
 using BFCAI.Nesyan.Domain.Entities.Medications;
+using BFCAI.Nesyan.Domain.Entities.Primary.Patients;
 using BFCAI.Nesyan.Domain.Entities.Primary.Relatives;
 using BFCAI.Nesyan.Domain.Entities.Relations.Primary;
 using BFCAI.Nesyan.Domain.Specifications.PatientRelatives;
+using BFCAI.Nesyan.Domain.Specifications.Patients;
 using BFCAI.Nesyan.Domain.Specifications.Relatives;
 using System;
 using System.Collections.Generic;
@@ -24,6 +26,25 @@ namespace BFCAI.Nesyan.Application.Services._Reltaions.RelativePatient
 {
     public class RelativePatientService(IUnitOfWork unitOfWork, IMapper mapper) : IRelativePatientService
     {
+        public async Task<PatientSummaryV2Dto> RelativeSearchByUserName(string userName)
+        {
+            var specs =new PatientSerachSpecifications(userName);
+            var patient =await unitOfWork.GetRepository<Patient, int>().GetWithSpecAsync(specs);
+            if(patient == null)
+                throw new NotFoundException(nameof(patient),userName);
+            return mapper.Map<PatientSummaryV2Dto>(patient);
+        }
+        public async Task AddExistingPatient(int relativeId, VerifyPatientDto dto)
+        {
+            var specs = new PatientSerachSpecifications(dto.PatientId);
+            var patient = await unitOfWork.GetRepository<Patient, int>().GetWithSpecAsync(specs);
+            if (dto.NationalId != patient!.NationalId && dto.Email != patient!.Email)
+                throw new BadRequestException("Data Incorrect");
+            var repo = unitOfWork.GetRepository<PatientRelative, int>();
+            await repo.AddAsync(new PatientRelative { RelativeId = relativeId, PatientId = dto.PatientId });
+            await unitOfWork.CompleteAsync();
+        }
+
         public async Task CreateRelativePatientRelation(int relativeId,int patientId)
         {
             var repo =unitOfWork.GetRepository<PatientRelative,int>();
@@ -169,7 +190,6 @@ namespace BFCAI.Nesyan.Application.Services._Reltaions.RelativePatient
 
             await unitOfWork.CompleteAsync();
         }
-
         public async Task DeleteReminder(int relativeId,int patientId,int reminderId)
         {
             var relationSpec =new RelativePatientCheckSpecifications(relativeId,patientId);

@@ -1,4 +1,5 @@
 ﻿using BFCAI.Nesyan.Application.Abstraction.Models._Relations.RelativePatient;
+using BFCAI.Nesyan.Application.Abstraction.Models.Patients;
 using BFCAI.Nesyan.Application.Abstraction.Models.Reminders;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ namespace BFCAI.Nesyan.Application.Abstraction.Services._Relations
 {
     public interface IRelativePatientService
     {
+        public Task AddExistingPatient(int relativeId, VerifyPatientDto dto);
+        public Task<PatientSummaryV2Dto> RelativeSearchByUserName(string userName);
         public Task CreateRelativePatientRelation(int relativeId, int patientId);
         public Task<RelativePatientsDto> GetRelativePatients(int relativeId);
         public Task<RelativePatientHomeDto> GetPatientHomeAsync(int relativeId, int patientId);

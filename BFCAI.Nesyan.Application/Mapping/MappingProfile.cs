@@ -27,6 +27,16 @@ namespace BFCAI.Nesyan.Application.Mapping
     {
         public MappingProfile()
         {
+            CreateMap<Patient, PatientSummaryV2Dto>()
+                 .ForMember(
+                    dest => dest.FullName,
+                    opt => opt.MapFrom(
+                        src =>
+                            $"{src.FName} {src.LName}"))
+                 .ForMember(
+                    dest => dest.PatientId,
+                    opt => opt.MapFrom(
+                        src =>src.Id)); 
             CreateMap<Doctor, DoctorToReturnDto>();
             CreateMap<Doctor, DoctorSummaryDto>()
                 .ForMember(

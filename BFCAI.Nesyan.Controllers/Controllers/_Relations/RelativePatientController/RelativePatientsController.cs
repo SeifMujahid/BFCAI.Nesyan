@@ -1,4 +1,5 @@
 ﻿using BFCAI.Nesyan.Application.Abstraction.Models._Relations.RelativePatient;
+using BFCAI.Nesyan.Application.Abstraction.Models.Patients;
 using BFCAI.Nesyan.Application.Abstraction.Models.Reminders;
 using BFCAI.Nesyan.Application.Abstraction.Services;
 using BFCAI.Nesyan.Application.Abstraction.Services._Relations;
@@ -21,6 +22,18 @@ namespace BFCAI.Nesyan.Controllers.Controllers._Relations.RelativePatientControl
         {
             await serviceManager.RelativePatientService.CreateRelativePatientRelation( relativeId,patientId);
             return Ok("Relative patient relation created successfully");
+        }
+        [Microsoft.AspNetCore.Mvc.HttpPost("add-existing-patient")]
+        public async Task<IActionResult> AddExisitingPatient(int relativeId, VerifyPatientDto dto)
+        {
+            await serviceManager.RelativePatientService.AddExistingPatient(relativeId, dto);
+            return Ok("Relative patient relation created successfully");
+        }
+        [Microsoft.AspNetCore.Mvc.HttpGet("search-patient")]
+        public async Task<ActionResult<RelativePatientsDto>> GetPatientByUsername([FromQuery]string userName)
+        {
+            var result = await serviceManager.RelativePatientService.RelativeSearchByUserName(userName);
+            return Ok(result);
         }
         [Microsoft.AspNetCore.Mvc.HttpGet("{relativeId}/patients")]
         public async Task<ActionResult<RelativePatientsDto>> GetRelativePatients(int relativeId)
