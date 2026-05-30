@@ -1,4 +1,4 @@
-﻿using BFCAI.Nesyan.Domain.Entities.Primary.Patients;
+using BFCAI.Nesyan.Domain.Entities.Primary.Patients;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +16,10 @@ namespace BFCAI.Nesyan.Domain.Specifications.Patients
         public PatientSerachSpecifications(string userName)
         {
             Criteria = P => P.UserName == userName;
+        }
+        public PatientSerachSpecifications(string nationalId, string email)
+        {
+            Criteria = P => P.NationalId == nationalId && P.Email == email;
         }
     }
 }

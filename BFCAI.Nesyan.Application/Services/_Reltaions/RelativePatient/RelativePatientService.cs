@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BFCAI.Nesyan.Application.Abstraction.Models._Relations.RelativePatient;
 using BFCAI.Nesyan.Application.Abstraction.Models.Appointments;
 using BFCAI.Nesyan.Application.Abstraction.Models.Patients;
@@ -36,12 +36,12 @@ namespace BFCAI.Nesyan.Application.Services._Reltaions.RelativePatient
         }
         public async Task AddExistingPatient(int relativeId, VerifyPatientDto dto)
         {
-            var specs = new PatientSerachSpecifications(dto.PatientId);
+            var specs = new PatientSerachSpecifications(dto.NationalId, dto.Email);
             var patient = await unitOfWork.GetRepository<Patient, int>().GetWithSpecAsync(specs);
-            if (dto.NationalId != patient!.NationalId && dto.Email != patient!.Email)
+            if (patient == null)
                 throw new BadRequestException("Data Incorrect");
             var repo = unitOfWork.GetRepository<PatientRelative, int>();
-            await repo.AddAsync(new PatientRelative { RelativeId = relativeId, PatientId = dto.PatientId });
+            await repo.AddAsync(new PatientRelative { RelativeId = relativeId, PatientId = patient.Id });
             await unitOfWork.CompleteAsync();
         }
 
