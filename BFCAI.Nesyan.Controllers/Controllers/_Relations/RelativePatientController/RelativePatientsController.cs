@@ -1,6 +1,7 @@
 using BFCAI.Nesyan.Application.Abstraction.Models._Relations.RelativePatient;
 using BFCAI.Nesyan.Application.Abstraction.Models.Patients;
 using BFCAI.Nesyan.Application.Abstraction.Models.Reminders;
+using BFCAI.Nesyan.Application.Abstraction.Models.Auth;
 using BFCAI.Nesyan.Application.Abstraction.Services;
 using BFCAI.Nesyan.Application.Abstraction.Services._Relations;
 using BFCAI.Nesyan.Controllers.Controllers.Base;
@@ -79,5 +80,17 @@ namespace BFCAI.Nesyan.Controllers.Controllers._Relations.RelativePatientControl
             return NoContent();
         }
 
+        [Microsoft.AspNetCore.Mvc.HttpPost("{relativeId}/register-patient")]
+        public async Task<IActionResult> RegisterPatient(int relativeId, [FromForm] RegisterPatientDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await serviceManager.RelativePatientService.RegisterAndAddPatientAsync(relativeId, dto);
+            if (!result.IsSuccess)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
     }
 }

@@ -7,24 +7,31 @@ using BFCAI.Nesyan.Application.Abstraction.Models.Reminders;
 using BFCAI.Nesyan.Application.Abstraction.Models.Reminders.Medications;
 using BFCAI.Nesyan.Application.Abstraction.Models.Routines;
 using BFCAI.Nesyan.Application.Abstraction.Services._Relations;
+using BFCAI.Nesyan.Application.Abstraction.Services;
+using BFCAI.Nesyan.Application.Abstraction.Models.Auth;
 using BFCAI.Nesyan.Application.Common.Exceptions;
 using BFCAI.Nesyan.Domain.Contracts;
 using BFCAI.Nesyan.Domain.Entities.Medications;
 using BFCAI.Nesyan.Domain.Entities.Primary.Patients;
 using BFCAI.Nesyan.Domain.Entities.Primary.Relatives;
+using BFCAI.Nesyan.Domain.Entities.Primary.Doctors;
+using BFCAI.Nesyan.Domain.Entities.Primary.Caregivers;
 using BFCAI.Nesyan.Domain.Entities.Relations.Primary;
 using BFCAI.Nesyan.Domain.Specifications.PatientRelatives;
 using BFCAI.Nesyan.Domain.Specifications.Patients;
 using BFCAI.Nesyan.Domain.Specifications.Relatives;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BFCAI.Nesyan.Application.Services._Reltaions.RelativePatient
 {
-    public class RelativePatientService(IUnitOfWork unitOfWork, IMapper mapper) : IRelativePatientService
+    public class RelativePatientService(IUnitOfWork unitOfWork, IMapper mapper, IEmailService emailService) : IRelativePatientService
     {
         public async Task<PatientSummaryV2Dto> RelativeSearchByUserName(string userName)
         {
@@ -224,6 +231,114 @@ namespace BFCAI.Nesyan.Application.Services._Reltaions.RelativePatient
             unitOfWork.GetRepository<PatientRelative, int>().Delete(relation);
 
             await unitOfWork.CompleteAsync();
+        }
+
+        private async Task<bool> IsEmailOrNationalIdOrUsernameExistsAsync(string email, string nationalId, string userName)
+        {
+            var patients = await unitOfWork.GetRepository<Patient, int>().GetTableNoTracking().AnyAsync(x => x.Email == email || x.NationalId == nationalId || x.UserName == userName);
+            var doctors = await unitOfWork.GetRepository<Doctor, int>().GetTableNoTracking().AnyAsync(x => x.Email == email || x.NationalId == nationalId || x.UserName == userName);
+            var relatives = await unitOfWork.GetRepository<Relative, int>().GetTableNoTracking().AnyAsync(x => x.Email == email || x.NationalId == nationalId || x.UserName == userName);
+            var caregivers = await unitOfWork.GetRepository<Caregiver, int>().GetTableNoTracking().AnyAsync(x => x.Email == email || x.NationalId == nationalId || x.UserName == userName);
+            
+            return patients || doctors || relatives || caregivers;
+        }
+
+        private string SaveFile(IFormFile? file, string folderName)
+        {
+            if (file == null || file.Length == 0) return string.Empty;
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", folderName);
+            if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
+            var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                file.CopyTo(fileStream);
+            }
+            return $"/uploads/{folderName}/{uniqueFileName}";
+        }
+
+        public async Task<AuthResponseDto> RegisterAndAddPatientAsync(int relativeId, RegisterPatientDto dto)
+        {
+            var relative = await unitOfWork.GetRepository<Relative, int>().Get(relativeId);
+            if (relative == null)
+                throw new NotFoundException(nameof(Relative), relativeId);
+
+            if (await IsEmailOrNationalIdOrUsernameExistsAsync(dto.Email, dto.NationalId, dto.UserName))
+                return new AuthResponseDto { IsSuccess = false, Message = "Email, National ID, or Username is already registered." };
+
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+            var imageUrl = dto.Image != null ? SaveFile(dto.Image, "patients/avatars") : null;
+
+            var patient = new Patient
+            {
+                Email = dto.Email,
+                UserName = dto.UserName,
+                NationalId = dto.NationalId,
+                Password = hashedPassword,
+                FName = dto.FName,
+                LName = dto.LName,
+                Phone = dto.Phone,
+                Gender = dto.Gender,
+                MaritalStatus = dto.MaritalStatus,
+                ImageUrl = imageUrl,
+                Country = dto.Country,
+                City = dto.City,
+                Age = dto.Age,
+                CurrentStage = dto.CurrentStage,
+                Height = dto.Height,
+                Weight = dto.Weight,
+                BloodType = dto.BloodType,
+                ChronicDisease = dto.Diseases != null && dto.Diseases.Count > 0 
+                    ? string.Join(",", dto.Diseases) 
+                    : string.Empty,
+                CreatedBy = "System",
+                CreatedOn = DateTime.UtcNow,
+                LastModifiedBy = "System",
+                LastModifiedOn = DateTime.UtcNow,
+                IsVerified = true,
+                VerificationCode = null,
+                VerificationCodeExpires = null
+            };
+
+            await unitOfWork.GetRepository<Patient, int>().AddAsync(patient);
+            await unitOfWork.CompleteAsync();
+
+            var patientRelativeRepo = unitOfWork.GetRepository<PatientRelative, int>();
+            await patientRelativeRepo.AddAsync(new PatientRelative 
+            { 
+                RelativeId = relativeId, 
+                PatientId = patient.Id,
+                EnrollmentDate = DateTime.UtcNow,
+                CreatedBy = "System",
+                CreatedOn = DateTime.UtcNow,
+                LastModifiedBy = "System",
+                LastModifiedOn = DateTime.UtcNow
+            });
+            await unitOfWork.CompleteAsync();
+
+            var relativeEmailBody = $"Dear {relative.FName} {relative.LName},\n\nWe are pleased to inform you that your patient, {patient.FName} {patient.LName}, has been successfully registered and linked to your account on the Nesyan application.\n\nYou can now manage their medications, appointments, routines, and monitor their safety through the application.\n\nBest regards,\nThe Nesyan Team";
+            var patientEmailBody = $"Dear {patient.FName} {patient.LName},\n\nWelcome to Nesyan! Your relative, {relative.FName} {relative.LName}, has successfully registered you on the Nesyan application.\n\nOur platform is designed to assist and support you and your family in managing daily tasks, medications, and maintaining safe routines.\n\nYour account details:\nUsername: {patient.UserName}\nEmail: {patient.Email}\n\nWarm regards,\nThe Nesyan Team";
+
+            try
+            {
+                await emailService.SendEmailAsync(relative.Email, "Patient Registered Successfully - Nesyan", relativeEmailBody);
+                await emailService.SendEmailAsync(patient.Email, "Welcome to Nesyan!", patientEmailBody);
+            }
+            catch
+            {
+                // Silence email sending failures so standard API still succeeds
+            }
+
+            return new AuthResponseDto 
+            { 
+                IsSuccess = true, 
+                Message = "Patient registered and linked successfully.",
+                Token = string.Empty,
+                UserId = patient.Id,
+                Email = patient.Email,
+                Role = "Patient",
+                Stage = patient.CurrentStage.ToString()
+            };
         }
     }
 

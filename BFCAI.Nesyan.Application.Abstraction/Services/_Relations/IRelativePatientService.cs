@@ -1,6 +1,7 @@
 using BFCAI.Nesyan.Application.Abstraction.Models._Relations.RelativePatient;
 using BFCAI.Nesyan.Application.Abstraction.Models.Patients;
 using BFCAI.Nesyan.Application.Abstraction.Models.Reminders;
+using BFCAI.Nesyan.Application.Abstraction.Models.Auth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,6 @@ namespace BFCAI.Nesyan.Application.Abstraction.Services._Relations
         public Task DeleteReminder(int relativeId, int patientId, int reminderId);
 
         public Task DeletePatientFromRelative(int relativeId, int patientId);
-
+        public Task<AuthResponseDto> RegisterAndAddPatientAsync(int relativeId, RegisterPatientDto dto);
     }
 }
