@@ -8,6 +8,7 @@ using BFCAI.Nesyan.Application.Abstraction.Services.Medications;
 using BFCAI.Nesyan.Application.Abstraction.Services.MindGames;
 using BFCAI.Nesyan.Application.Abstraction.Services.Patients;
 using BFCAI.Nesyan.Application.Abstraction.Services.TreatmentRequests;
+using BFCAI.Nesyan.Application.Abstraction.Services.Location;
 using BFCAI.Nesyan.Application.Services._Reltaions.RelativePatient;
 using BFCAI.Nesyan.Application.Services.Auth;
 using BFCAI.Nesyan.Application.Services.Caregivers;
@@ -18,6 +19,7 @@ using BFCAI.Nesyan.Application.Services.MindGames;
 using BFCAI.Nesyan.Application.Services.Patients;
 using BFCAI.Nesyan.Application.Services.Relatives;
 using BFCAI.Nesyan.Application.Services.TreatmentRequests;
+using BFCAI.Nesyan.Application.Services.Location;
 using BFCAI.Nesyan.Domain.Contracts;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -46,6 +48,7 @@ namespace BFCAI.Nesyan.Application.Services
         private readonly Lazy<IRelativePatientService> _relativePatientService;
         private readonly Lazy<IFamilyMembersService> _familyMembersService;
         private readonly Lazy<IDoctorRemovalBackgroundService> _doctorRemovalBackgroundService;
+        private readonly Lazy<ILocationService> _locationService;
 
         private readonly IEmailService _emailService;
         private readonly IHttpClientFactory _httpClientFactory;
@@ -74,6 +77,7 @@ namespace BFCAI.Nesyan.Application.Services
             _relativePatientService = new Lazy<IRelativePatientService>(() => new RelativePatientService(_unitOfWork, _mapper));
             _familyMembersService = new Lazy<IFamilyMembersService>(() => new FamilyMembersService(_unitOfWork, _mapper));
             _doctorRemovalBackgroundService = new Lazy<IDoctorRemovalBackgroundService>(()=>new DoctorRemovalBackgroundService(_unitOfWork));
+            _locationService = new Lazy<ILocationService>(() => new LocationService(_unitOfWork));
         }
         public IDoctorService DoctorService => _doctorService.Value;
 
@@ -96,5 +100,6 @@ namespace BFCAI.Nesyan.Application.Services
         public IFamilyMembersService FamilyMembersService => _familyMembersService.Value;
 
         public IDoctorRemovalBackgroundService DoctorRemovalBackgroundService => _doctorRemovalBackgroundService.Value;
+        public ILocationService LocationService => _locationService.Value;
     }
 }

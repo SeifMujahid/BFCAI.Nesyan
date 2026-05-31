@@ -9,6 +9,7 @@ using BFCAI.Nesyan.Domain.Entities.Relations.Alerts;
 using BFCAI.Nesyan.Domain.Entities.Relations.MindGames;
 using BFCAI.Nesyan.Domain.Entities.Relations.Primary;
 using BFCAI.Nesyan.Domain.Entities.Reports;
+using BFCAI.Nesyan.Domain.Entities.Location;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using System;
@@ -47,10 +48,8 @@ namespace BFCAI.Nesyan.Infrastructure.Presistence.Data
         public DbSet<Medication> Medications { get; set; }
         public DbSet<Assessment> Assessments { get; set; }
         public DbSet<BFCAI.Nesyan.Domain.Entities.IoT.PatientTelemetry> PatientTelemetries { get; set; }
-
-
-        //public DbSet<TreatmentRequest> TreatmentRequests { get; set; }
-        //public DbSet<MindGame> MindGames { get; set; }
-        //public DbSet<PatientMindGame> PatientMindGames { get; set; }
+        public DbSet<SafeZone> SafeZones { get; set; }
+        public DbSet<LocationHistory> LocationHistories { get; set; }
+        public DbSet<GeofenceViolation> GeofenceViolations { get; set; }
     }
 }

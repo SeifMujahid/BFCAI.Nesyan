@@ -8,6 +8,7 @@ using BFCAI.Nesyan.Application.Abstraction.Services.MindGames;
 using BFCAI.Nesyan.Application.Abstraction.Services.Patients;
 using BFCAI.Nesyan.Application.Abstraction.Services.Relatives;
 using BFCAI.Nesyan.Application.Abstraction.Services.TreatmentRequests;
+using BFCAI.Nesyan.Application.Abstraction.Services.Location;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,5 +31,6 @@ namespace BFCAI.Nesyan.Application.Abstraction.Services
         public IRelativePatientService RelativePatientService { get; }
         public IFamilyMembersService FamilyMembersService { get; }
         public IDoctorRemovalBackgroundService DoctorRemovalBackgroundService { get; }
+        public ILocationService LocationService { get; }
     }
 }

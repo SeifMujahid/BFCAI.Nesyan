@@ -41,5 +41,6 @@ namespace BFCAI.Nesyan.Domain.Entities.Primary
         public DateTime? VerificationCodeExpires { get; set; }
         public string? PasswordResetCode { get; set; }
         public DateTime? PasswordResetCodeExpires { get; set; }
+        public string? FcmToken { get; set; }
     }
 }
