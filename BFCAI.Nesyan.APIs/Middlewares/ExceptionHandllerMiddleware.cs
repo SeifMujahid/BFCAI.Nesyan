@@ -21,8 +21,11 @@ namespace BFCAI.Nesyan.APIs.Middlewares
             try
             {
                 await _next(httpContent);
-                if (httpContent.Response.StatusCode==(int)HttpStatusCode.NotFound)
+                if (httpContent.Response.StatusCode == (int)HttpStatusCode.NotFound && 
+                    !httpContent.Response.HasStarted && 
+                    string.IsNullOrEmpty(httpContent.Response.ContentType))
                 {
+                    httpContent.Response.ContentType = "application/json";
                     var response = new ApiResponse((int)HttpStatusCode.NotFound, $"The requested endpoint: {httpContent.Request.Path} is not found");
 
                     await httpContent.Response.WriteAsync(response.ToString());
@@ -59,7 +62,7 @@ namespace BFCAI.Nesyan.APIs.Middlewares
                 case BadRequestException:
                     httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     httpContext.Response.ContentType = "application/json";
-                    response = new ApiResponse(404, ex.Message);
+                    response = new ApiResponse(400, ex.Message);
                     await httpContext.Response.WriteAsync(response.ToString());
                     break;
 

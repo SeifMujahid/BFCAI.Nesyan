@@ -1,6 +1,7 @@
 using BFCAI.Nesyan.Application.Abstraction.Models.IoT;
 using BFCAI.Nesyan.Application.Abstraction.Services;
 using BFCAI.Nesyan.Application.Abstraction.Services.IoT;
+using BFCAI.Nesyan.Controllers.Errors;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -23,7 +24,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers
         public async Task<IActionResult> AddTelemetry([FromBody] TelemetryRequestDto dto)
         {
             if (dto == null || dto.PatientId <= 0)
-                return BadRequest("Invalid telemetry data or missing PatientId.");
+                return BadRequest(new ApiResponse(400, "Invalid telemetry data or missing PatientId."));
 
             await _serviceManager.TelemetryService.AddTelemetryAsync(dto);
             await _telemetryNotifier.NotifyTelemetryAsync(dto);
@@ -36,7 +37,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers
         {
             var latest = _serviceManager.TelemetryService.GetLatestTelemetry(patientId);
             if (latest == null)
-                return NotFound("No telemetry data available for this patient.");
+                return NotFound(new ApiResponse(404, "No telemetry data available for this patient."));
 
             return Ok(latest);
         }

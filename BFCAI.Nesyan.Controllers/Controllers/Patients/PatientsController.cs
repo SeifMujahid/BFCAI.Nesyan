@@ -3,6 +3,7 @@ using BFCAI.Nesyan.Application.Abstraction.Services.Patients;
 using BFCAI.Nesyan.Application.Abstraction.Models.Patients;
 using BFCAI.Nesyan.Application.Abstraction.Models.Reminders;
 using BFCAI.Nesyan.Controllers.Controllers.Base;
+using BFCAI.Nesyan.Controllers.Errors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BFCAI.Nesyan.Controllers.Controllers.Patients
@@ -19,7 +20,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Patients
             }
             catch (System.Exception ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new ApiResponse(404, ex.Message));
             }
         }
 
@@ -33,7 +34,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Patients
             }
             catch (System.Exception ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new ApiResponse(404, ex.Message));
             }
         }
 
@@ -62,7 +63,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Patients
             }
             catch (System.Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiResponse(400, ex.Message));
             }
         }
 
@@ -76,7 +77,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Patients
             }
             catch (System.Exception ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new ApiResponse(404, ex.Message));
             }
         }
 
@@ -90,7 +91,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Patients
             }
             catch (System.Exception ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new ApiResponse(404, ex.Message));
             }
         }
 
@@ -104,7 +105,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Patients
             }
             catch (System.Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiResponse(400, ex.Message));
             }
         }
 
@@ -118,7 +119,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Patients
             }
             catch (System.Exception ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new ApiResponse(404, ex.Message));
             }
         }
 
@@ -132,7 +133,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Patients
             }
             catch (System.Exception ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new ApiResponse(404, ex.Message));
             }
         }
     }

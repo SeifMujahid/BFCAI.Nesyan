@@ -52,7 +52,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Caregivers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiResponse(400, ex.Message));
             }
         }
 

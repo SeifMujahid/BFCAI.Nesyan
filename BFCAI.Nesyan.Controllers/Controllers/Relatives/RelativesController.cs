@@ -1,6 +1,7 @@
 using BFCAI.Nesyan.Application.Abstraction.Models.Relatives;
 using BFCAI.Nesyan.Application.Abstraction.Services;
 using BFCAI.Nesyan.Controllers.Controllers.Base;
+using BFCAI.Nesyan.Controllers.Errors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Relatives
             }
             catch (Exception ex)
             {
-                return NotFound($"Relative with id {id} not found: {ex.Message}");
+                return NotFound(new ApiResponse(404, $"Relative with id {id} not found: {ex.Message}"));
             }
         }
 
@@ -41,7 +42,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Relatives
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiResponse(400, ex.Message));
             }
         }
 
@@ -55,7 +56,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Relatives
             }
             catch (Exception ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new ApiResponse(404, ex.Message));
             }
         }
 
@@ -69,7 +70,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Relatives
             }
             catch (Exception ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new ApiResponse(404, ex.Message));
             }
         }
 

@@ -1,6 +1,7 @@
 using BFCAI.Nesyan.Application.Abstraction.Models.Patients;
 using BFCAI.Nesyan.Application.Abstraction.Services;
 using BFCAI.Nesyan.Controllers.Controllers.Base;
+using BFCAI.Nesyan.Controllers.Errors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Patients
             }
             catch (Exception ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new ApiResponse(404, ex.Message));
             }
         }
 
@@ -34,7 +35,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Patients
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiResponse(400, ex.Message));
             }
         }
 
@@ -48,7 +49,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Patients
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiResponse(400, ex.Message));
             }
         }
 
@@ -59,12 +60,12 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Patients
             {
                 var success = await serviceManager.FamilyMembersService.DeleteFamilyMemberAsync(id);
                 if (!success)
-                    return NotFound($"Family member with ID {id} not found.");
+                    return NotFound(new ApiResponse(404, $"Family member with ID {id} not found."));
                 return NoContent(); // 204
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiResponse(400, ex.Message));
             }
         }
     }

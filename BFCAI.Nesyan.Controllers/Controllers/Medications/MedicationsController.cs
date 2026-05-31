@@ -3,6 +3,7 @@ using BFCAI.Nesyan.Application.Abstraction.Models.Reminders;
 using BFCAI.Nesyan.Application.Abstraction.Models.Routines;
 using BFCAI.Nesyan.Application.Abstraction.Services.Medications;
 using BFCAI.Nesyan.Controllers.Controllers.Base;
+using BFCAI.Nesyan.Controllers.Errors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Medications
             }
             catch (Exception ex)
             {
-                return NotFound(ex.InnerException?.Message ?? ex.Message);
+                return NotFound(new ApiResponse(404, ex.InnerException?.Message ?? ex.Message));
             }
         }
 
@@ -36,7 +37,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Medications
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.InnerException?.Message ?? ex.Message);
+                return BadRequest(new ApiResponse(400, ex.InnerException?.Message ?? ex.Message));
             }
         }
 
@@ -50,7 +51,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.Medications
             }
             catch (Exception ex)
             {
-                return NotFound(ex.InnerException?.Message ?? ex.Message);
+                return NotFound(new ApiResponse(404, ex.InnerException?.Message ?? ex.Message));
             }
         }
     }

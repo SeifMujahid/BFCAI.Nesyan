@@ -1,6 +1,7 @@
 using BFCAI.Nesyan.Application.Abstraction.Models.MindGames;
 using BFCAI.Nesyan.Application.Abstraction.Services.MindGames;
 using BFCAI.Nesyan.Controllers.Controllers.Base;
+using BFCAI.Nesyan.Controllers.Errors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.MindGames
             }
             catch (Exception ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new ApiResponse(404, ex.Message));
             }
         }
 
@@ -30,12 +31,12 @@ namespace BFCAI.Nesyan.Controllers.Controllers.MindGames
             try
             {
                 var game = await MindGamesService.GetMindGameByIdAsync(id);
-                if (game == null) return NotFound(new { Message = $"Mind game with ID {id} not found." });
+                if (game == null) return NotFound(new ApiResponse(404, $"Mind game with ID {id} not found."));
                 return Ok(game);
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Message = ex.Message });
+                return BadRequest(new ApiResponse(400, ex.Message));
             }
         }
 
@@ -49,7 +50,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.MindGames
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Message = ex.Message });
+                return BadRequest(new ApiResponse(400, ex.Message));
             }
         }
 
@@ -63,7 +64,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.MindGames
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Message = ex.Message });
+                return BadRequest(new ApiResponse(400, ex.Message));
             }
         }
 
@@ -73,12 +74,12 @@ namespace BFCAI.Nesyan.Controllers.Controllers.MindGames
             try
             {
                 var success = await MindGamesService.DeleteMindGameAsync(id);
-                if (!success) return NotFound(new { Message = $"Mind game with ID {id} not found." });
+                if (!success) return NotFound(new ApiResponse(404, $"Mind game with ID {id} not found."));
                 return NoContent();
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Message = ex.Message });
+                return BadRequest(new ApiResponse(400, ex.Message));
             }
         }
 
@@ -92,7 +93,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.MindGames
             }
             catch (Exception ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new ApiResponse(404, ex.Message));
             }
         }
 
@@ -106,7 +107,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.MindGames
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiResponse(400, ex.Message));
             }
         }
 
@@ -120,7 +121,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.MindGames
             }
             catch (Exception ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new ApiResponse(404, ex.Message));
             }
         }
 
@@ -134,7 +135,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.MindGames
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Message = ex.Message });
+                return BadRequest(new ApiResponse(400, ex.Message));
             }
         }
 
@@ -148,7 +149,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.MindGames
             }
             catch (Exception ex)
             {
-                return NotFound(new { Message = ex.Message });
+                return NotFound(new ApiResponse(404, ex.Message));
             }
         }
 
@@ -162,7 +163,7 @@ namespace BFCAI.Nesyan.Controllers.Controllers.MindGames
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Message = ex.Message });
+                return BadRequest(new ApiResponse(400, ex.Message));
             }
         }
     }
