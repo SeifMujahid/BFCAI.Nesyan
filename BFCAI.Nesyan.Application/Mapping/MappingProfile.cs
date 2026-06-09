@@ -96,7 +96,7 @@ namespace BFCAI.Nesyan.Application.Mapping
                 .ForMember(d => d.Phone, o => o.MapFrom(s => s.Phone))
                 .ForMember(d => d.ImageUrl, o => o.MapFrom(s => s.ImageUrl))
                 .ForMember(d => d.Doctor, o => o.MapFrom(s => s.Doctor))
-                .ForMember(d => d.Caregiver, o => o.MapFrom(s => s.Caregiver))
+                .ForMember(d => d.Caregivers, o => o.MapFrom(s => s.Caregiver != null ? new List<Caregiver> { s.Caregiver } : new List<Caregiver>()))
                 .ForMember(d => d.Relatives, o => o.MapFrom(s => s.PatientRelatives.Select(pr => pr.Relative)))
                 .ForMember(d => d.Telemetries, o => o.MapFrom(s => s.PatientTelemetries))
                 .ForMember(d => d.Medications, o => o.MapFrom(s => s.Reminders.Where(r => r.Type == ReminderType.Medication)))

@@ -30,7 +30,7 @@ namespace BFCAI.Nesyan.Application.Abstraction.Models.Patients
         public List<string> Diseases { get; set; } = new List<string>();
 
         public PatientDoctorDto? Doctor { get; set; }
-        public PatientCaregiverDto? Caregiver { get; set; }
+        public IEnumerable<PatientCaregiverDto> Caregivers { get; set; } = new List<PatientCaregiverDto>();
         public IEnumerable<PatientRelativeDto> Relatives { get; set; } = new List<PatientRelativeDto>();
 
         public IEnumerable<TelemetryRequestDto> Telemetries { get; set; } = new List<TelemetryRequestDto>();
