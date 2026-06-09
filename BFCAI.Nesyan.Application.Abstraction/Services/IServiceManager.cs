@@ -32,5 +32,7 @@ namespace BFCAI.Nesyan.Application.Abstraction.Services
         public IFamilyMembersService FamilyMembersService { get; }
         public IDoctorRemovalBackgroundService DoctorRemovalBackgroundService { get; }
         public ILocationService LocationService { get; }
+        public IDoctorPatientService DoctorPatientService { get; }
+        public ICaregiverPatientService CaregiverPatientService { get; }
     }
 }

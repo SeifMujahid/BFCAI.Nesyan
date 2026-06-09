@@ -49,6 +49,8 @@ namespace BFCAI.Nesyan.Application.Services
         private readonly Lazy<IFamilyMembersService> _familyMembersService;
         private readonly Lazy<IDoctorRemovalBackgroundService> _doctorRemovalBackgroundService;
         private readonly Lazy<ILocationService> _locationService;
+        private readonly Lazy<IDoctorPatientService> _doctorPatientService;
+        private readonly Lazy<ICaregiverPatientService> _caregiverPatientService;
 
         private readonly IEmailService _emailService;
         private readonly IHttpClientFactory _httpClientFactory;
@@ -78,6 +80,8 @@ namespace BFCAI.Nesyan.Application.Services
             _familyMembersService = new Lazy<IFamilyMembersService>(() => new FamilyMembersService(_unitOfWork, _mapper, _httpClientFactory, _configuration));
             _doctorRemovalBackgroundService = new Lazy<IDoctorRemovalBackgroundService>(()=>new DoctorRemovalBackgroundService(_unitOfWork));
             _locationService = new Lazy<ILocationService>(() => new LocationService(_unitOfWork));
+            _doctorPatientService = new Lazy<IDoctorPatientService>(() => new BFCAI.Nesyan.Application.Services._Reltaions.DoctorPatient.DoctorPatientService(_unitOfWork, _mapper));
+            _caregiverPatientService = new Lazy<ICaregiverPatientService>(() => new BFCAI.Nesyan.Application.Services._Reltaions.CaregiverPatient.CaregiverPatientService(_unitOfWork, _mapper));
         }
         public IDoctorService DoctorService => _doctorService.Value;
 
@@ -101,5 +105,7 @@ namespace BFCAI.Nesyan.Application.Services
 
         public IDoctorRemovalBackgroundService DoctorRemovalBackgroundService => _doctorRemovalBackgroundService.Value;
         public ILocationService LocationService => _locationService.Value;
+        public IDoctorPatientService DoctorPatientService => _doctorPatientService.Value;
+        public ICaregiverPatientService CaregiverPatientService => _caregiverPatientService.Value;
     }
 }
