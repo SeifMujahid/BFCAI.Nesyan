@@ -59,11 +59,17 @@ namespace BFCAI.Nesyan.Application.Abstraction.Models.Doctors
         [JsonPropertyName("confidence")]
         public double? Confidence { get; set; }
 
+        [JsonPropertyName("risk_score")]
+        public int? RiskScore { get; set; }
+
         [JsonPropertyName("probabilities")]
         public ProbabilitiesDto? Probabilities { get; set; }
 
         [JsonPropertyName("alert")]
         public string? Alert { get; set; }
+
+        [JsonPropertyName("explanation")]
+        public List<ExplanationDto>? Explanation { get; set; }
 
         [JsonPropertyName("predicted_at")]
         public DateTime? PredictedAt { get; set; }

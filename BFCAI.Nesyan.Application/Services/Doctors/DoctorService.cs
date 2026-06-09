@@ -412,8 +412,10 @@ namespace BFCAI.Nesyan.Application.Services.Doctors
                             cognitiveSection.Message = "Cognitive report generated successfully by AI service.";
                             cognitiveSection.Prediction = aiReport.Prediction;
                             cognitiveSection.Confidence = aiReport.Confidence;
+                            cognitiveSection.RiskScore = aiReport.RiskScore;
                             cognitiveSection.Probabilities = aiReport.Probabilities;
                             cognitiveSection.Alert = aiReport.Alert;
+                            cognitiveSection.Explanation = aiReport.Explanation;
                             cognitiveSection.PredictedAt = aiReport.PredictedAt;
                         }
                         else
