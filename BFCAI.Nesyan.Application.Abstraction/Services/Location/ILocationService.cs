@@ -15,5 +15,6 @@ namespace BFCAI.Nesyan.Application.Abstraction.Services.Location
         Task<PatientLastLocationDto> GetLastKnownLocationAsync(int patientId);
         Task<IEnumerable<LocationHistoryDto>> GetLocationHistoryAsync(int patientId, DateTime from, DateTime to, int limit = 100);
         Task<IEnumerable<GeofenceViolationDto>> GetViolationsAsync(int patientId);
+        Task<string> GetPlaceNameAsync(double lat, double lng);
     }
 }

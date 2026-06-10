@@ -5,8 +5,10 @@ using BFCAI.Nesyan.Domain.Entities.Location;
 using BFCAI.Nesyan.Domain.Entities.Primary.Patients;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -15,11 +17,14 @@ namespace BFCAI.Nesyan.Application.Services.Location
     public class LocationService : ILocationService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IHttpClientFactory _httpClientFactory;
         private static readonly JsonSerializerOptions _jsonOptions = new() { PropertyNameCaseInsensitive = true };
+        private static readonly ConcurrentDictionary<(double, double), string> _placeNameCache = new();
 
-        public LocationService(IUnitOfWork unitOfWork)
+        public LocationService(IUnitOfWork unitOfWork, IHttpClientFactory httpClientFactory)
         {
             _unitOfWork = unitOfWork;
+            _httpClientFactory = httpClientFactory;
         }
 
         public async Task<IEnumerable<SafeZoneDto>> GetSafeZonesAsync(int patientId)
@@ -288,7 +293,8 @@ namespace BFCAI.Nesyan.Application.Services.Location
                 {
                     Lat = patient.LastKnownLat.Value,
                     Lng = patient.LastKnownLng.Value,
-                    UpdatedAt = patient.LastLocationUpdated.Value
+                    UpdatedAt = patient.LastLocationUpdated.Value,
+                    PlaceName = await GetPlaceNameAsync(patient.LastKnownLat.Value, patient.LastKnownLng.Value)
                 }
                 : null;
 
@@ -316,12 +322,62 @@ namespace BFCAI.Nesyan.Application.Services.Location
                 .Take(limit)
                 .ToListAsync();
 
-            return history.Select(h => new LocationHistoryDto
+            var tasks = history.Select(async h => new LocationHistoryDto
             {
                 Lat = h.Lat,
                 Lng = h.Lng,
-                RecordedAt = h.RecordedAt
+                RecordedAt = h.RecordedAt,
+                PlaceName = await GetPlaceNameAsync(h.Lat, h.Lng)
             });
+
+            return await Task.WhenAll(tasks);
+        }
+
+        public async Task<string> GetPlaceNameAsync(double lat, double lng)
+        {
+            if (lat < -90 || lat > 90 || lng < -180 || lng > 180)
+            {
+                return "Invalid Coordinates";
+            }
+
+            double roundedLat = Math.Round(lat, 4);
+            double roundedLng = Math.Round(lng, 4);
+            var key = (roundedLat, roundedLng);
+
+            if (_placeNameCache.TryGetValue(key, out var cachedPlace))
+            {
+                return cachedPlace;
+            }
+
+            try
+            {
+                var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("NesyanApp/1.0 (contact: nesyanplatform@gmail.com)");
+                client.DefaultRequestHeaders.AcceptLanguage.ParseAdd("en-US,en;q=0.9");
+
+                var url = $"https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat={lat}&lon={lng}";
+                var response = await client.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    using var doc = JsonDocument.Parse(content);
+                    if (doc.RootElement.TryGetProperty("display_name", out var displayProp))
+                    {
+                        var placeName = displayProp.GetString();
+                        if (!string.IsNullOrEmpty(placeName))
+                        {
+                            _placeNameCache[key] = placeName;
+                            return placeName;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error resolving place name for lat: {lat}, lng: {lng} - {ex.Message}");
+            }
+
+            return "Unknown Location";
         }
 
         public async Task<IEnumerable<GeofenceViolationDto>> GetViolationsAsync(int patientId)

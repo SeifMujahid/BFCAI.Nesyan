@@ -30,6 +30,7 @@ namespace BFCAI.Nesyan.Application.Abstraction.Models.Location
         public double Lat { get; set; }
         public double Lng { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public string? PlaceName { get; set; }
     }
 
     public class ActiveBreachDto
@@ -53,6 +54,7 @@ namespace BFCAI.Nesyan.Application.Abstraction.Models.Location
         public double Lat { get; set; }
         public double Lng { get; set; }
         public DateTime RecordedAt { get; set; }
+        public string? PlaceName { get; set; }
     }
 
     public class GeofenceViolationDto

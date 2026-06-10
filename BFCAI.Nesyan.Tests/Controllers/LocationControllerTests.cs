@@ -38,8 +38,8 @@ namespace BFCAI.Nesyan.Tests.Controllers
             
             var expectedHistory = new List<LocationHistoryDto>
             {
-                new() { Lat = 30.1234, Lng = 31.5678, RecordedAt = DateTime.UtcNow.AddDays(-4) },
-                new() { Lat = 30.1235, Lng = 31.5679, RecordedAt = DateTime.UtcNow.AddDays(-3) }
+                new() { Lat = 30.1234, Lng = 31.5678, RecordedAt = DateTime.UtcNow.AddDays(-4), PlaceName = "Test Place 1" },
+                new() { Lat = 30.1235, Lng = 31.5679, RecordedAt = DateTime.UtcNow.AddDays(-3), PlaceName = "Test Place 2" }
             };
 
             _mockLocationService
