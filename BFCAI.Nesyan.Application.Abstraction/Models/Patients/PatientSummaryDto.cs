@@ -21,5 +21,9 @@ namespace BFCAI.Nesyan.Application.Abstraction.Models.Patients
         public string Phone { get; set; } = null!;
         public string? ImageUrl { get; set; }
         public PatientReminderSummaryDto? NearestReminder { get; set; }
+        public int? DoctorId { get; set; }
+        public int? CaregiverId { get; set; }
+
+
     }
 }

@@ -155,7 +155,15 @@ namespace BFCAI.Nesyan.Application.Mapping
                     dest => dest.ImageUrl,
                     opt => opt.MapFrom(src =>
                         src.Patient.ImageUrl))
-
+                .ForMember(
+                    dest => dest.DoctorId,
+                    opt => opt.MapFrom(src =>
+                        src.Patient.DoctorId))
+                
+                .ForMember(
+                    dest => dest.CaregiverId,
+                    opt => opt.MapFrom(src =>
+                        src.Patient.CaregiverId))
                 .ForMember(
                     dest => dest.NearestReminder,
                     opt => opt.MapFrom(src =>
