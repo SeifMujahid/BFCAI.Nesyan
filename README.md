@@ -114,7 +114,7 @@ src
 └── test
     └── BFCAI.Nesyan.Tests
 
-![Folder Structure](docs/folder-strucutre.png)
+
 
 ## Database Design
 
