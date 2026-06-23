@@ -54,7 +54,7 @@ The project follows **Onion Architecture**.
 
 ![Architecture](docs/architecture.png)
 
-## Tech Stack
+## Technology Stack
 
 ### Backend
 - ASP.NET Core
@@ -66,26 +66,54 @@ The project follows **Onion Architecture**.
 ### Database
 - SQL Server
 
-### Design Patterns
+### Architecture & Design Patterns
 - Onion Architecture
 - Repository Pattern
 - Specification Pattern
 - CQRS
 - Dependency Injection
 
+### Artificial Intelligence
+
+- Natural Language Processing (NLP)
+- Machine Learning Models
+- Cognitive Assessment Models
+### IoT Technologies
+
+- ESP32
+- GPS Module
+- MAX30100
+- MPU6050
+
+### Development Tools
+
+- Visual Studio
+- Git
+- GitHub
+- Postman
+- Swagger
+
 ## Project Structure
 
-```text
-BFCAI.Nesyan.APIs
-BFCAI.Nesyan.Application
-BFCAI.Nesyan.Application.Abstraction
-BFCAI.Nesyan.Controllers
-BFCAI.Nesyan.Domain
-BFCAI.Nesyan.Infrastructure
-BFCAI.Nesyan.Infrastructure.Persistence
-BFCAI.Nesyan.Tests
-```
-
+src
+├── APIs
+│   ├── BFCAI.Nesyan.APIs
+│   └── BFCAI.Nesyan.Controllers
+│
+├── Core
+│   ├── BFCAI.Nesyan.Application
+│   ├── BFCAI.Nesyan.Application.Abstraction
+│   └── BFCAI.Nesyan.Domain
+│
+├── Infrastructure
+│   ├── BFCAI.Nesyan.Infrastructure
+│   └── BFCAI.Nesyan.Infrastructure.Persistence
+│
+├── UI
+│
+└── test
+    └── BFCAI.Nesyan.Tests
+![Folder Structure](docs/folder-strucutre.png)
 ## Database Design
 
 ![Database Design](docs/erd.png)
@@ -107,13 +135,31 @@ Swagger documentation is available when running the project.
 - Designed and managed SQL Server database structure.
 - Participated in API documentation and testing.
 
-## Future Enhancements
+## AI & IoT Features
 
-- AI-powered symptom analysis
-- Voice recognition integration
-- Speaker identification
-- Cognitive assessment system
-- Advanced healthcare analytics
+### Artificial Intelligence
+
+- AI-Powered Symptom Analysis
+- Natural Language Processing (NLP)
+- Cognitive Decline Assessment
+- Healthcare Recommendation Engine
+- Voice Recognition
+- Speaker Identification
+
+### Internet of Things (IoT)
+
+- GPS-Based Patient Tracking
+- Real-Time Health Monitoring
+- Sensor Data Collection
+- Emergency Alert Support
+
+### Smart Healthcare Services
+
+- Medication Reminder System
+- Appointment Management
+- Treatment Request Management
+- Patient-Caregiver Coordination
+- Medical Report Management
 
 ## Team
 
