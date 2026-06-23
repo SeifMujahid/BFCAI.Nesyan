@@ -95,6 +95,7 @@ The project follows **Onion Architecture**.
 
 ## Project Structure
 
+```text
 src
 ├── APIs
 │   ├── BFCAI.Nesyan.APIs
@@ -113,6 +114,9 @@ src
 │
 └── test
     └── BFCAI.Nesyan.Tests
+```
+
+![Folder Structure](docs/folder-strucutre.png)
 
 
 
