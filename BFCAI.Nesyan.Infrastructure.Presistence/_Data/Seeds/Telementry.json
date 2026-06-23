@@ -1,0 +1,12 @@
+﻿[
+  {
+    "Hr": 78,
+    "Spo2": 98,
+    "Steps": 4200,
+    "Lat": 30.0444,
+    "Lng": 31.2357,
+    "Status": "Normal",
+    "Timestamp": "2026-05-15T08:30:00",
+    "PatientId": 1
+  }
+]

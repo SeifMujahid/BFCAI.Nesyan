@@ -1,0 +1,42 @@
+﻿[
+  {
+    "RecognitionOfName": 3,
+    "RecognitionOfPlace": 3,
+    "RecognitionOfTime": 2,
+    "AbilityToConcentrate": 2,
+    "RecallOfRecentEvents": 2,
+
+    "AnxietyOrStress": 2,
+    "DepressionOrSadness": 1,
+    "Aggression": 1,
+
+    "EatingAndDrinking": 3,
+    "Bathing": 2,
+    "Dressing": 2,
+    "UsingBathroom": 3,
+    "Mobility": 2,
+
+    "Notes": "Patient shows moderate memory decline but stable daily activity.",
+    "PatientId": 1
+  },
+  {
+    "RecognitionOfName": 2,
+    "RecognitionOfPlace": 2,
+    "RecognitionOfTime": 1,
+    "AbilityToConcentrate": 1,
+    "RecallOfRecentEvents": 1,
+
+    "AnxietyOrStress": 3,
+    "DepressionOrSadness": 2,
+    "Aggression": 2,
+
+    "EatingAndDrinking": 2,
+    "Bathing": 1,
+    "Dressing": 1,
+    "UsingBathroom": 2,
+    "Mobility": 1,
+
+    "Notes": "Patient requires supervision for most activities.",
+    "PatientId": 1
+  }
+]

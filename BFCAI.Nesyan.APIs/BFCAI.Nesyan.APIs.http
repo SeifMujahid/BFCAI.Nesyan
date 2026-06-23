@@ -1,0 +1,19 @@
+@BFCAI.Nesyan.APIs_HostAddress = http://localhost:5107
+
+GET {{BFCAI.Nesyan.APIs_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+# Test Location History - Valid Request (change patientId and date parameters as needed)
+GET {{BFCAI.Nesyan.APIs_HostAddress}}/api/v1/patients/1/location/history?from=2026-06-01T00:00:00Z&to=2026-06-10T23:59:59Z&limit=50
+Accept: application/json
+
+###
+
+# Test Location History - Invalid Request (Missing 'from' and 'to' parameters)
+GET {{BFCAI.Nesyan.APIs_HostAddress}}/api/v1/patients/1/location/history
+Accept: application/json
+
+###
+

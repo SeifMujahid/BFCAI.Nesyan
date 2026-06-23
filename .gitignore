@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/BFCAI.Nesyan.Infrastructure.Presistence/Data/Migrations/20260418214204_LinkPatientToDoctor.cs
+/BFCAI.Nesyan.Infrastructure.Presistence/Data/Migrations/20260418214204_LinkPatientToDoctor.Designer.cs

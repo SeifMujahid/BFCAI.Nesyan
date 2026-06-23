@@ -1,0 +1,34 @@
+[
+  {
+    "GraduationDegree": "PhD in Neurology",
+    "MedicalAssociationCard": "123456789",
+    "NationalId": "2981203912093",
+    "FName": "Ahmed",
+    "LName": "Hassan",
+    "UserName": "ahmed_hassan",
+    "Email": "ahmed@example.com",
+    "Password": "Password123!",
+    "Gender": 0,
+    "Country": "Egypt",
+    "City": "Cairo",
+    "Age": 45,
+    "Phone": "01062767619",
+    "Specialization": "Neurology"
+  },
+  {
+    "GraduationDegree": "MSc in Psychiatry",
+    "MedicalAssociationCard": "987654321",
+    "NationalId": "2901010101010",
+    "FName": "Mona",
+    "LName": "Zaki",
+    "UserName": "mona_zaki",
+    "Email": "mona@example.com",
+    "Password": "Password123!",
+    "Gender": 1,
+    "Country": "Egypt",
+    "City": "Alexandria",
+    "Age": 38,
+    "Phone": "01062767618",
+    "Specialization": "Psychiatry"
+  }
+]

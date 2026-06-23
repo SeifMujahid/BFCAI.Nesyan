@@ -1,0 +1,14 @@
+[
+  {
+    "NationalId": "2950505050505",
+    "FName": "Omar",
+    "LName": "Mohamed",
+    "UserName": "omar_mohamed",
+    "Email": "omar@example.com",
+    "Password": "Password123!",
+    "Gender": 0,
+    "Country": "Egypt",
+    "City": "Cairo",
+    "Age": 40
+  }
+]

@@ -1,0 +1,41 @@
+[
+  {
+    "CurrentStage": 1,
+    "Height": 175.5,
+    "Weight": 70.0,
+    "BloodType": 0,
+    "ChronicDisease": "Diabetes",
+    "NationalId": "3010101010101",
+    "FName": "Mohamed",
+    "LName": "Ali",
+    "UserName": "mohamed_ali",
+    "Email": "mohamed@example.com",
+    "Password": "Password123!",
+    "Gender": 0,
+    "Country": "Egypt",
+    "City": "Cairo",
+    "Age": 65,
+    "DoctorId": 1,
+    "CaregiverId": 1
+
+  },
+  {
+    "CurrentStage": 2,
+    "Height": 160.0,
+    "Weight": 65.5,
+    "BloodType": 2,
+    "ChronicDisease": "Hypertension",
+    "NationalId": "3020202020202",
+    "FName": "Fatma",
+    "LName": "Ibrahim",
+    "UserName": "fatma_ibrahim",
+    "Email": "fatma@example.com",
+    "Password": "Password123!",
+    "Gender": 1,
+    "Country": "Egypt",
+    "City": "Giza",
+    "Age": 72,
+    "DoctorId": 1,
+    "CaregiverId": 1
+  }
+]

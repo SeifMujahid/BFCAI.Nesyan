@@ -1,0 +1,16 @@
+[
+  {
+    "Name": "Monthly Cognitive Assessment",
+    "Type": "Cognitive",
+    "Details": "Patient showed slight improvement in memory matching game.",
+    "TargetMetrics": "Accuracy: 85%, Speed: 40s",
+    "PatientId": 1
+  },
+  {
+    "Name": "Weekly Activity Report",
+    "Type": "Activity",
+    "Details": "Patient was active for an average of 2 hours per day.",
+    "TargetMetrics": "Active Hours: 14",
+    "PatientId": 1
+  }
+]

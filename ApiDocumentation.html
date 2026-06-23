@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BFCAI.Nesyan API Documentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f111a;
+            --text-main: #f0f2f8;
+            --text-muted: #a0a8c2;
+            --sidebar-bg: #151823;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            
+            --primary-accent: #6b4cff;
+            --gradient-accent: linear-gradient(135deg, #6b4cff, #a94cff);
+
+            /* Method Colors */
+            --get-color: #2ed573;
+            --get-bg: rgba(46, 213, 115, 0.15);
+            --post-color: #ffa502;
+            --post-bg: rgba(255, 165, 2, 0.15);
+            --put-color: #3742fa;
+            --put-bg: rgba(55, 66, 250, 0.15);
+            --patch-color: #eccc68;
+            --patch-bg: rgba(236, 204, 104, 0.15);
+            --delete-color: #ff4757;
+            --delete-bg: rgba(255, 71, 87, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--card-border);
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        .sidebar-brand {
+            padding: 0 2rem 2rem 2rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            border-bottom: 1px solid var(--card-border);
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 1rem 2rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--text-main);
+            background: rgba(107, 76, 255, 0.1);
+            border-left: 4px solid var(--primary-accent);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 3rem;
+            flex: 1;
+            max-width: calc(100vw - 280px);
+        }
+
+        .header {
+            margin-bottom: 4rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        /* Sections */
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--card-border);
+            color: #fff;
+            padding-top: 2rem;
+        }
+
+        /* Cards */
+        .endpoint-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .endpoint-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .method-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .method-get { color: var(--get-color); background: var(--get-bg); }
+        .method-post { color: var(--post-color); background: var(--post-bg); }
+        .method-put { color: var(--put-color); background: var(--put-bg); }
+        .method-patch { color: var(--patch-color); background: var(--patch-bg); }
+        .method-delete { color: var(--delete-color); background: var(--delete-bg); }
+
+        .endpoint-url {
+            font-family: monospace;
+            font-size: 1.2rem;
+            color: var(--text-main);
+            background: rgba(0,0,0,0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            word-break: break-all;
+        }
+
+        .endpoint-desc {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .detail-box {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #fff;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .detail-title span {
+            width: 8px;
+            height: 8px;
+            background: var(--primary-accent);
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .detail-content {
+            color: var(--text-main);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+
+        .code-block {
+            background: #090a10;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: monospace;
+            color: #a0a8c2;
+            margin-top: 1rem;
+            overflow-x: auto;
+            white-space: pre;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .status-success { background: rgba(46, 213, 115, 0.2); color: #2ed573; }
+        .status-error { background: rgba(255, 71, 87, 0.2); color: #ff4757; }
+        
+        .tag-important {
+            color: #ffa502;
+            font-weight: 600;
+        }
+
+        /* Mobile View toggle */
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 100;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-family: inherit;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+
+        @media (max-width: 992px) {
+            .mobile-menu-btn { display: block; }
+            .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+            .sidebar.show { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 2rem 1.5rem; max-width: 100vw; }
+            .header h1 { font-size: 2.2rem; margin-top: 3rem; }
+            .details-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mobile-menu-btn" onclick="toggleSidebar()">Menu</button>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-brand">Nesyan API</div>
+        <a href="#doctors" class="nav-link">Doctors</a>
+        <a href="#patients" class="nav-link">Patients</a>
+        <a href="#medications" class="nav-link">Medications</a>
+        <a href="#mindgames" class="nav-link">Mind Games</a>
+        <a href="#treatmentrequests" class="nav-link">Treatment Requests</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h1>API Documentation</h1>
+            <p>Comprehensive guide linking request parameters seamlessly to response payloads with specific JSON payload examples.</p>
+        </div>
+
+        <!-- ================== DOCTORS ================== -->
+        <h2 class="section-title" id="doctors">Doctors</h2>
+
+        <!-- GET /api/Doctor -->
+        <div class="endpoint-card">
+            <div class="endpoint-header">
+                <span class="method-badge method-get">GET</span>
+                <span class="endpoint-url">/api/Doctor</span>
+            </div>
+            <p class="endpoint-desc">Retrieves a comprehensive list of all registered doctors in the system. Typically used to populate dropdowns or doctor lists.</p>
+            
+            <div class="details-grid">
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Request</div>
+                    <div class="detail-content">
+                        <strong>No parameters or body required.</strong>
+                    </div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Response (200 OK)</div>
+                    <div class="detail-content">
+                        Array of <code>DoctorToReturnDto</code>
+<div class="code-block">[
+  {
+    "id": 1,
+    "fName": "Jane",
+    "lName": "Doe",
+    "userName": "janedoe",
+    "gender": "Female",
+    "country": "Egypt",
+    "city": "Cairo",
+    "age": 34,
+    "graduationDegree": "/Uploads/Doctors/uuid.jpg",
+    "medicalAssociationCard": "/Uploads/Doctors/uuid2.jpg"
+  }
+]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GET /api/Doctor/{id} -->
+        <div class="endpoint-card">
+            <div class="endpoint-header">
+                <span class="method-badge method-get">GET</span>
+                <span class="endpoint-url">/api/Doctor/{id}</span>
+            </div>
+            <p class="endpoint-desc">Retrieves detailed information (including document URLs) of a specific doctor by ID.</p>
+            
+            <div class="details-grid">
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Request</div>
+                    <div class="detail-content">
+                        <strong>Path Parameter:</strong> <code>id</code> (integer)<br>
+                        e.g., <code>/api/Doctor/1</code>
+                    </div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Response (200 OK)</div>
+                    <div class="detail-content">
+                        <code>DoctorToReturnDto</code>
+<div class="code-block">{
+  "id": 1,
+  "fName": "Jane",
+  "lName": "Doe",
+  ...
+}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- POST /api/Doctor -->
+        <div class="endpoint-card">
+            <div class="endpoint-header">
+                <span class="method-badge method-post">POST</span>
+                <span class="endpoint-url">/api/Doctor</span>
+            </div>
+            <p class="endpoint-desc">Creates a new doctor profile, expecting standard form fields along with document file attachments.</p>
+            
+            <div class="details-grid">
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Request (multipart/form-data)</div>
+                    <div class="detail-content">
+                        <code>DoctorCreationRequest</code> sent as Form Data:<br><br>
+                        <ul style="margin-left: 1rem;">
+                            <li><code>NationalId</code>: "123456789"</li>
+                            <li><code>FName</code>: "Ahmed"</li>
+                            <li><code>LName</code>: "Ali"</li>
+                            <li><code>UserName</code>: "ahmedali1"</li>
+                            <li><code>Email</code>: "ahmed@example.com"</li>
+                            <li><code>Password</code>: "Secret_123"</li>
+                            <li><code>Gender</code>: "Male"</li>
+                            <li><code>Country</code>: "Egypt"</li>
+                            <li><code>City</code>: "Alexandria"</li>
+                            <li><code>Age</code>: "42"</li>
+                        </ul>
+                        <br><strong>Files:</strong>
+                        <ul style="margin-left: 1rem;">
+                            <li class="tag-important"><code>GraduationDegreeFile</code> (.jpg/.png/.pdf)</li>
+                            <li class="tag-important"><code>MedicalAssociationCardFile</code> (.jpg/.png/.pdf)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Response (201 Created)</div>
+                    <div class="detail-content">
+                        Returns the created <code>DoctorToReturnDto</code>. Includes the new local Upload Paths generated for files.
+<div class="code-block">{
+  "id": 2,
+  "fName": "Ahmed",
+  "...": "...",
+  "graduationDegree": "/Uploads/Doctors/xxx.jpg",
+  "medicalAssociationCard": "/Uploads/Doctors/yyy.jpg"
+}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PUT /api/Doctor/{id} -->
+        <div class="endpoint-card">
+            <div class="endpoint-header">
+                <span class="method-badge method-put">PUT</span>
+                <span class="endpoint-url">/api/Doctor/{id}</span>
+            </div>
+            <p class="endpoint-desc">Allows updating primitive string/int properties for a given Doctor.</p>
+            
+            <div class="details-grid">
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Request</div>
+                    <div class="detail-content">
+                        <strong>Path Parameter:</strong> <code>id</code><br>
+                        <strong>Body Type:</strong> <code>application/json</code>
+<div class="code-block">{
+  "id": 1,
+  "fName": "Jane",
+  "lName": "Smith",
+  "userName": "janesmith",
+  "gender": "Female",
+  "country": "Egypt",
+  "city": "Cairo",
+  "age": 35,
+  "graduationDegree": "string_url",
+  "medicalAssociationCard": "string_url"
+}</div>
+                    </div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Response (204 No Content)</div>
+                    <div class="detail-content">
+                        <span class="status-badge status-success">204 No Content</span> Sent upon successful update.<br><br>
+                        <span class="status-badge status-error">404</span> Sent if the doctor ID does not exist in db.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DELETE /api/Doctor/{id} -->
+        <div class="endpoint-card">
+            <div class="endpoint-header">
+                <span class="method-badge method-delete">DELETE</span>
+                <span class="endpoint-url">/api/Doctor/{id}</span>
+            </div>
+            <p class="endpoint-desc">Permanently remove a doctor from the system.</p>
+            
+            <div class="details-grid">
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Request</div>
+                    <div class="detail-content">
+                        <strong>Path Parameter:</strong> <code>id</code> (integer)<br>
+                        <strong>No body required.</strong>
+                    </div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Response (204 No Content)</div>
+                    <div class="detail-content">
+                        <span class="status-badge status-success">204 No Content</span> Deletion success.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GET /api/Doctor/{id}/patients -->
+        <div class="endpoint-card">
+            <div class="endpoint-header">
+                <span class="method-badge method-get">GET</span>
+                <span class="endpoint-url">/api/Doctor/{id}/patients</span>
+            </div>
+            <p class="endpoint-desc">Lists all patients that have been assigned directly to this particular Doctor.</p>
+            
+            <div class="details-grid">
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Request</div>
+                    <div class="detail-content">
+                        <strong>Path Parameter:</strong> <code>id</code> (integer)
+                    </div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Response (200 OK)</div>
+                    <div class="detail-content">
+                        Array of <code>PatientToReturnDto</code>
+<div class="code-block">[
+  {
+    "id": 10,
+    "fName": "Omar",
+    "lName": "Badr",
+    "age": 60,
+    "gender": "Male",
+    "currentStageName": "Stage 1"
+  }
+]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GET /api/Doctor/{id}/statistics -->
+        <div class="endpoint-card">
+            <div class="endpoint-header">
+                <span class="method-badge method-get">GET</span>
+                <span class="endpoint-url">/api/Doctor/{id}/statistics</span>
+            </div>
+            <p class="endpoint-desc">Gets summarized dashbaord statistics specifically useful for a Doctor's home page.</p>
+            
+            <div class="details-grid">
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Request</div>
+                    <div class="detail-content">
+                        <strong>Path Parameter:</strong> <code>id</code> (integer)
+                    </div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Response (200 OK)</div>
+                    <div class="detail-content">
+                        <code>DoctorStatisticsDto</code>
+<div class="code-block">{
+  "totalPatients": 12,
+  "pendingRequests": 3
+}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ================== PATIENTS ================== -->
+        <h2 class="section-title" id="patients">Patients</h2>
+
+        <!-- PATCH /api/Patients/{id}/stage -->
+        <div class="endpoint-card">
+            <div class="endpoint-header">
+                <span class="method-badge method-patch">PATCH</span>
+                <span class="endpoint-url">/api/Patients/{id}/stage</span>
+            </div>
+            <p class="endpoint-desc">Dynamically overwrite the patient's stage level. Used when their health changes.</p>
+            
+            <div class="details-grid">
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Request</div>
+                    <div class="detail-content">
+                        <strong>Path Parameter:</strong> <code>id</code> (integer)<br>
+                        <strong>Body Type:</strong> <code>application/json</code><br>
+<div class="code-block">2</div>
+                        <i style="color:var(--text-muted);font-size:0.8rem;">(Provide just the integer value representing the stage)</i>
+                    </div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Response (204 No Content)</div>
+                    <div class="detail-content">
+                        <span class="status-badge status-success">204 No Content</span> Success.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GET /api/Patients/{id}/profile -->
+        <div class="endpoint-card">
+            <div class="endpoint-header">
+                <span class="method-badge method-get">GET</span>
+                <span class="endpoint-url">/api/Patients/{id}/profile</span>
+            </div>
+            <p class="endpoint-desc">An extensive aggregated response detailing personal info, active medications, and their assigned mind games in one request.</p>
+            
+            <div class="details-grid">
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Request</div>
+                    <div class="detail-content">
+                        <strong>Path Parameter:</strong> <code>id</code> (integer)
+                    </div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Response (200 OK)</div>
+                    <div class="detail-content">
+                        <code>PatientFullProfileDto</code>
+<div class="code-block">{
+  "id": 5,
+  "fName": "Sarah",
+  "...": "...",
+  "currentStageName": "Moderate",
+  "medications": [
+    {
+      "id": 1,
+      "name": "Panadol",
+      "dosage": "500mg",
+      "frequency": "Twice daily"
+    }
+  ],
+  "assignedGames": [
+    {
+      "patientId": 5,
+      "mindGameId": 2,
+      "mindGame": {
+        "name": "Memory Match",
+        "category": "Cognitive"
+      },
+      "assignedOn": "2024-03-16T12:00:00Z"
+    }
+  ]
+}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ================== MEDICATIONS ================== -->
+        <h2 class="section-title" id="medications">Medications</h2>
+
+        <!-- GET /api/Medications/patient/{patientId} -->
+        <div class="endpoint-card">
+            <div class="endpoint-header">
+                <span class="method-badge method-get">GET</span>
+                <span class="endpoint-url">/api/Medications/patient/{patientId}</span>
+            </div>
+            <p class="endpoint-desc">Get isolated collection of a patient's medications independently from their full profile.</p>
+            
+            <div class="details-grid">
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Request</div>
+                    <div class="detail-content">
+                        <strong>Path Parameter:</strong> <code>patientId</code> (integer)
+                    </div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Response (200 OK)</div>
+                    <div class="detail-content">
+                        Array of <code>MedicationToReturnDto</code>
+<div class="code-block">[
+  {
+    "id": 101,
+    "name": "Donepezil",
+    "dosage": "5mg",
+    "frequency": "Once daily",
+    "scheduleInstructions": "Take before bedtime",
+    "notes": "With water",
+    "patientId": 5,
+    "doctorId": 2
+  }
+]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- POST /api/Medications -->
+        <div class="endpoint-card">
+            <div class="endpoint-header">
+                <span class="method-badge method-post">POST</span>
+                <span class="endpoint-url">/api/Medications</span>
+            </div>
+            <p class="endpoint-desc">A Doctor prescribing a brand new medication to a specific patient.</p>
+            
+            <div class="details-grid">
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Request</div>
+                    <div class="detail-content">
+                        <strong>Body Type:</strong> <code>application/json</code>
+<div class="code-block">{
+  "name": "Memantine",
+  "dosage": "10mg",
+  "frequency": "Twice a day",
+  "scheduleInstructions": "After meals",
+  "notes": "Start with lower half dose first week",
+  "patientId": 5,
+  "doctorId": 2
+}</div>
+                    </div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Response (201 Created)</div>
+                    <div class="detail-content">
+                        Returns full <code>MedicationToReturnDto</code>.
+<div class="code-block">{
+  "id": 102,
+  "name": "Memantine",
+  "dosage": "10mg",
+  "frequency": "Twice a day",
+  "scheduleInstructions": "After meals",
+  "notes": "Start with lower half dose first week",
+  "patientId": 5,
+  "doctorId": 2
+}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DELETE /api/Medications/{id} -->
+        <div class="endpoint-card">
+            <div class="endpoint-header">
+                <span class="method-badge method-delete">DELETE</span>
+                <span class="endpoint-url">/api/Medications/{id}</span>
+            </div>
+            <p class="endpoint-desc">Revoke a medication prescription from a patient's active lineup.</p>
+            
+            <div class="details-grid">
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Request</div>
+                    <div class="detail-content">
+                        <strong>Path Parameter:</strong> <code>id</code> (integer)<br>
+                        <strong>No body required.</strong>
+                    </div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Response (204 No Content)</div>
+                    <div class="detail-content">
+                        <span class="status-badge status-success">204 No Content</span> Success removal.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ================== MIND GAMES ================== -->
+        <h2 class="section-title" id="mindgames">Mind Games</h2>
+
+        <!-- GET /api/MindGames/catalog -->
+        <div class="endpoint-card">
+            <div class="endpoint-header">
+                <span class="method-badge method-get">GET</span>
+                <span class="endpoint-url">/api/MindGames/catalog</span>
+            </div>
+            <p class="endpoint-desc">Retrieves globally available mind games stored securely in the app used for assigning to users.</p>
+            
+            <div class="details-grid">
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Request</div>
+                    <div class="detail-content">No parameters needed.</div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Response (200 OK)</div>
+                    <div class="detail-content">
+                        Array of <code>MindGameDto</code>
+<div class="code-block">[
+  {
+    "id": 1,
+    "name": "Word Puzzle",
+    "description": "Crossword for logic.",
+    "category": "Vocabulary",
+    "thumbnailUrl": "/assets/games/word.png"
+  }
+]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GET /api/MindGames/patient/{patientId} -->
+        <div class="endpoint-card">
+            <div class="endpoint-header">
+                <span class="method-badge method-get">GET</span>
+                <span class="endpoint-url">/api/MindGames/patient/{patientId}</span>
+            </div>
+            <p class="endpoint-desc">Retrieves the specific list of active mind games currently bound to the patient.</p>
+            
+            <div class="details-grid">
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Request</div>
+                    <div class="detail-content">
+                        <strong>Path Parameter:</strong> <code>patientId</code>
+                    </div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Response (200 OK)</div>
+                    <div class="detail-content">
+                        Array of <code>PatientMindGameDto</code>
+<div class="code-block">[
+  {
+    "patientId": 5,
+    "mindGameId": 1,
+    "mindGame": {
+      "id": 1,
+      "name": "Word Puzzle",
+      ...
+    },
+    "assignedOn": "2024-03-12T10:00:00"
+  }
+]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- POST /api/MindGames/patient/{patientId}/assign/{gameId} -->
+        <div class="endpoint-card">
+            <div class="endpoint-header">
+                <span class="method-badge method-post">POST</span>
+                <span class="endpoint-url">/api/MindGames/patient/{patientId}/assign/{gameId}</span>
+            </div>
+            <p class="endpoint-desc">Used to append a particular mind game to a patient's routine list. Only requires parameters on the URL path.</p>
+            
+            <div class="details-grid">
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Request</div>
+                    <div class="detail-content">
+                        <strong>Path Parameters:</strong><br>
+                        <code>patientId</code>: 5<br>
+                        <code>gameId</code>: 1<br><br>
+                        <strong>Body:</strong> None required.
+                    </div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Response (200 OK)</div>
+                    <div class="detail-content">
+                        JSON Message payload.
+<div class="code-block">{
+  "message": "Game assigned successfully"
+}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DELETE /api/MindGames/patient/{patientId}/remove/{gameId} -->
+        <div class="endpoint-card">
+            <div class="endpoint-header">
+                <span class="method-badge method-delete">DELETE</span>
+                <span class="endpoint-url">/api/MindGames/patient/{patientId}/remove/{gameId}</span>
+            </div>
+            <p class="endpoint-desc">Removes an assigned mind game from a patient's active games list.</p>
+            
+            <div class="details-grid">
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Request</div>
+                    <div class="detail-content">
+                        <strong>Path Parameters:</strong><br>
+                        <code>patientId</code>: 5<br>
+                        <code>gameId</code>: 1<br><br>
+                        <strong>Body:</strong> None required.
+                    </div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Response (204 No Content)</div>
+                    <div class="detail-content">
+                        <span class="status-badge status-success">204 No Content</span> Success removal.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ================== TREATMENT REQUESTS ================== -->
+        <h2 class="section-title" id="treatmentrequests">Treatment Requests</h2>
+
+        <!-- POST /api/TreatmentRequests -->
+        <div class="endpoint-card">
+            <div class="endpoint-header">
+                <span class="method-badge method-post">POST</span>
+                <span class="endpoint-url">/api/TreatmentRequests</span>
+            </div>
+            <p class="endpoint-desc">Form submission containing detailed behavioral symptoms linked to a patient sent for a doctor's review.</p>
+            
+            <div class="details-grid">
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Request</div>
+                    <div class="detail-content">
+                        <strong>Body:</strong> <code>TreatmentRequestToCreateDto</code>
+<div class="code-block">{
+  "memoryLossFrequency": "Daily",
+  "confusionFrequency": "Weekly",
+  "languageProblems": "Often struggles to name objects",
+  "moodChanges": "Easily agitated",
+  "repetitiveBehavior": "Repeats same questions",
+  "patientId": 5,
+  "doctorId": 2,
+  "relativeId": 12
+}</div>
+                    </div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Response (200 OK)</div>
+                    <div class="detail-content">
+                        <code>TreatmentRequestToReturnDto</code>
+<div class="code-block">{
+  "id": 50,
+  "memoryLossFrequency": "Daily",
+  "confusionFrequency": "Weekly",
+  "languageProblems": "Often struggles to name objects",
+  "moodChanges": "Easily agitated",
+  "repetitiveBehavior": "Repeats same questions",
+  "status": "Pending",
+  "patientId": 5,
+  "patientName": "Sarah Connor",
+  "patientAge": 68,
+  "doctorId": 2,
+  "relativeId": 12,
+  "relativeName": "John Connor",
+  "relativeRelationship": "Son"
+}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GET /api/TreatmentRequests/doctor/{doctorId}/pending -->
+        <div class="endpoint-card">
+            <div class="endpoint-header">
+                <span class="method-badge method-get">GET</span>
+                <span class="endpoint-url">/api/TreatmentRequests/doctor/{doctorId}/pending</span>
+            </div>
+            <p class="endpoint-desc">Return an array of all treatment requests pending action by the specified doctor.</p>
+            
+            <div class="details-grid">
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Request</div>
+                    <div class="detail-content">
+                        <strong>Path Parameter:</strong> <code>doctorId</code>
+                    </div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Response (200 OK)</div>
+                    <div class="detail-content">
+                        Array of pending <code>TreatmentRequestToReturnDto</code>.
+<div class="code-block">[ 
+  { 
+    "id": 50, 
+    "status": "Pending", 
+    "patientName": "Sarah Connor",
+    ... 
+  } 
+]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PATCH /api/TreatmentRequests/{id}/accept -->
+        <div class="endpoint-card">
+            <div class="endpoint-header">
+                <span class="method-badge method-patch">PATCH</span>
+                <span class="endpoint-url">/api/TreatmentRequests/{id}/accept</span>
+            </div>
+            <p class="endpoint-desc">Update the state of a specific TreatmentRequest to 'Accepted'. This binds the patient to the doctor formally in the system.</p>
+            
+            <div class="details-grid">
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Request</div>
+                    <div class="detail-content">
+                        <strong>Path Parameter:</strong> <code>id</code> (integer)<br><br>
+                        <strong>No body required.</strong>
+                    </div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Response (204 No Content)</div>
+                    <div class="detail-content">
+                        <span class="status-badge status-success">204 No Content</span> Success.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PATCH /api/TreatmentRequests/{id}/reject -->
+        <div class="endpoint-card">
+            <div class="endpoint-header">
+                <span class="method-badge method-patch">PATCH</span>
+                <span class="endpoint-url">/api/TreatmentRequests/{id}/reject</span>
+            </div>
+            <p class="endpoint-desc">Update the state of a specific TreatmentRequest to 'Rejected'.</p>
+            
+            <div class="details-grid">
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Request</div>
+                    <div class="detail-content">
+                        <strong>Path Parameter:</strong> <code>id</code> (integer)<br><br>
+                        <strong>No body required.</strong>
+                    </div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-title"><span></span> Response (204 No Content)</div>
+                    <div class="detail-content">
+                        <span class="status-badge status-success">204 No Content</span> Success.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('show');
+        }
+
+        const sections = document.querySelectorAll('.section-title');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 60) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

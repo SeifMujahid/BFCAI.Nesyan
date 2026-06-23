@@ -1,0 +1,14 @@
+[
+  {
+    "Title": "Memory Match",
+    "Subtitle": "A simple card matching game to improve short-term memory.",
+    "Image": "images/memory-match.png",
+    "Level": "Easy"
+  },
+  {
+    "Title": "Word Puzzle",
+    "Subtitle": "Find hidden words in a grid to stimulate language processing.",
+    "Image": "images/word-puzzle.png",
+    "Level": "Medium"
+  }
+]

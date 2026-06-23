@@ -1,0 +1,14 @@
+[
+  {
+    "Title": "Missed Medication",
+    "Category": "Health",
+    "Priority": "High",
+    "Message": "Patient missed their morning medication dose."
+  },
+  {
+    "Title": "Low Activity",
+    "Category": "Activity",
+    "Priority": "Medium",
+    "Message": "Patient has not moved from bed in the last 4 hours."
+  }
+]
