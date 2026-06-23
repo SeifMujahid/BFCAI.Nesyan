@@ -178,3 +178,9 @@ Faculty of Computer Science and Artificial Intelligence, Benha University.
 - LinkedIn: https://linkedin.com/in/ibrahim-mokhtar-16966a378
 - GitHub: https://github.com/Ibrahim-Mokhtar
 - Email: ibrahim.mokhtar1611@gmail.com
+
+**Seif Mujahid ALi Allithy**
+
+- LinkedIn: www.linkedin.com/in/seif-mujahid-960773299
+- GitHub: https://github.com/SeifMujahid
+- Email: seifmogahed18@gmail.com
