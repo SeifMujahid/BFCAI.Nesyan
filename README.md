@@ -184,3 +184,11 @@ Faculty of Computer Science and Artificial Intelligence, Benha University.
 - LinkedIn: www.linkedin.com/in/seif-mujahid-960773299
 - GitHub: https://github.com/SeifMujahid
 - Email: seifmogahed18@gmail.com
+
+
+**Zeyad Yasser Salah**
+
+- LinkedIn: https://www.linkedin.com/in/zeyadyasser228/
+- GitHub: https://github.com/zeyadyasser228
+- Email: zeyady1974@gmail.com
+- Portfolio : https://ziad-yasser.com/
